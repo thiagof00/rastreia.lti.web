@@ -1,0 +1,189 @@
+<!-- templates/cargas.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+
+<body>
+    <th:block th:fragment="content">
+
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="page-title">Etapas</div>
+                <div class="breadcrumb"><i class="ti ti-chevron-right" style="font-size:14px"></i><span>Gerenciar</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="search-wrap"><i class="ti ti-search"></i><input class="search-input"
+                        placeholder="Buscar por carga, motorista..."></div>
+                <button class="btn btn-primary" onclick="openModal('modal-etapa-new')"><i class="ti ti-plus"></i> Nova
+                    etapa</button>
+            </div>
+        </header>
+        <main class="content">
+            <div class="stats-row cols-3">
+                <div class="stat-card">
+                    <div class="stat-icon si-purple"><i class="ti ti-map-pin"></i></div>
+                    <div class="stat-body">
+                        <div class="stat-value" style="color:var(--purple-500)">18</div>
+                        <div class="stat-label">Total de etapas</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon si-amber"><i class="ti ti-route"></i></div>
+                    <div class="stat-body">
+                        <div class="stat-value" style="color:var(--amber-600)">9</div>
+                        <div class="stat-label">Em trânsito</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon si-green"><i class="ti ti-circle-check"></i></div>
+                    <div class="stat-body">
+                        <div class="stat-value" style="color:var(--green-600)">9</div>
+                        <div class="stat-label">Concluídas</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="ti ti-list"></i> Lista de etapas de transporte</div>
+                    <div class="card-actions">
+                        <select class="filter-select">
+                            <option>Todas as cargas</option>
+                            <option>Carga #001</option>
+                            <option>Carga #003</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>Todos os status</option>
+                            <option>Em viagem</option>
+                            <option>Concluído</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Carga</th>
+                                <th>Invoice</th>
+                                <th>PO / NF</th>
+                                <th>Rota</th>
+                                <th>Próx. parada</th>
+                                <th>Caminhão</th>
+                                <th>Carreta(s)</th>
+                                <th>Motorista</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="td-mono">#E01</td>
+                                <td><span style="color:var(--purple-500);font-weight:500">#001</span></td>
+                                <td class="td-mono">100123</td>
+                                <td>
+                                    <div class="td-mono">PO-2025-001</div>
+                                    <div class="td-muted">NF-4521</div>
+                                </td>
+                                <td>
+                                    <div class="rota">SP <span class="arrow"><i class="ti ti-arrow-right"></i></span>
+                                        Curitiba <span class="arrow"><i class="ti ti-arrow-right"></i></span>
+                                        Florianópolis</div>
+                                </td>
+                                <td>Florianópolis, SC</td>
+                                <td class="td-mono">ABC-1234</td>
+                                <td>
+                                    <div class="td-mono">XYZ-001</div>
+                                    <div class="td-muted">XYZ-002</div>
+                                </td>
+                                <td><span class="mini-avatar">CS</span>Carlos Silva</td>
+                                <td><span class="badge badge-amber">Em viagem</span></td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button class="row-btn edit" title="Editar etapa"
+                                            onclick="openModal('modal-etapa-edit')"><i class="ti ti-edit"></i></button>
+                                        <button class="row-btn del" title="Excluir"
+                                            onclick="openModal('modal-delete-generic','etapa #E01')"><i
+                                                class="ti ti-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-mono">#E02</td>
+                                <td><span style="color:var(--purple-500);font-weight:500">#002</span></td>
+                                <td class="td-mono">100456</td>
+                                <td>
+                                    <div class="td-mono">PO-2025-002</div>
+                                    <div class="td-muted">NF-4522</div>
+                                </td>
+                                <td>
+                                    <div class="rota">Campinas <span class="arrow"><i
+                                                class="ti ti-arrow-right"></i></span>
+                                        Florianópolis <span class="arrow"><i class="ti ti-arrow-right"></i></span> Porto
+                                        Alegre</div>
+                                </td>
+                                <td>Porto Alegre, RS</td>
+                                <td class="td-mono">GHI-9012</td>
+                                <td class="td-mono">XYZ-004</td>
+                                <td><span class="mini-avatar">MS</span>Maria Santos</td>
+                                <td><span class="badge badge-green">Concluído</span></td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button class="row-btn edit" title="Editar etapa"
+                                            onclick="openModal('modal-etapa-edit')"><i class="ti ti-edit"></i></button>
+                                        <button class="row-btn del" title="Excluir"
+                                            onclick="openModal('modal-delete-generic','etapa #E02')"><i
+                                                class="ti ti-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-mono">#E03</td>
+                                <td><span style="color:var(--purple-500);font-weight:500">#003</span></td>
+                                <td class="td-mono">100789</td>
+                                <td>
+                                    <div class="td-mono">PO-2025-003</div>
+                                    <div class="td-muted">NF-4523</div>
+                                </td>
+                                <td>
+                                    <div class="rota">RJ <span class="arrow"><i class="ti ti-arrow-right"></i></span>
+                                        São Paulo <span class="arrow"><i class="ti ti-arrow-right"></i></span> BH</div>
+                                </td>
+                                <td>Belo Horizonte, MG</td>
+                                <td class="td-mono">DEF-5678</td>
+                                <td>
+                                    <div class="td-mono">XYZ-002</div>
+                                    <div class="td-muted">XYZ-003</div>
+                                </td>
+                                <td><span class="mini-avatar">JP</span>João Pereira</td>
+                                <td><span class="badge badge-amber">Em viagem</span></td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button class="row-btn edit" title="Editar etapa"
+                                            onclick="openModal('modal-etapa-edit')"><i class="ti ti-edit"></i></button>
+                                        <button class="row-btn del" title="Excluir"
+                                            onclick="openModal('modal-delete-generic','etapa #E03')"><i
+                                                class="ti ti-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <span class="pagination-info">Mostrando 1–3 de 18 registros</span>
+                    <div class="pagination-btns">
+                        <button class="page-btn" disabled><i class="ti ti-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn">3</button>
+                        <button class="page-btn"><i class="ti ti-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </th:block>
+</body>
+
+</html>

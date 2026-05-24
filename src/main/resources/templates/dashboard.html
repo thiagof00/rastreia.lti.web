@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+
+<body>
+    <th:block th:fragment="content">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="page-title">Dashboard</div>
+                <div class="breadcrumb">
+                    <i class="ti ti-chevron-right" style="font-size:14px;"></i>
+                    <span>Visão geral</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="search-wrap">
+                    <i class="ti ti-search"></i>
+                    <input class="search-input" type="text" placeholder="Buscar carga, motorista...">
+                </div>
+                <button class="btn"><i class="ti ti-refresh"></i> Atualizar</button>
+                <button class="btn btn-primary"><i class="ti ti-plus"></i> Nova carga</button>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <main class="content">
+
+            <!-- ── Métricas ── -->
+            <div>
+                <div class="section-head">
+                    <div class="section-title"><i class="ti ti-chart-pie"></i> Resumo geral</div>
+                    <span style="font-size:12px; color:var(--text-3);">Atualizado agora</span>
+                </div>
+                <div class="metrics-grid">
+                    <div class="metric-card purple">
+                        <div class="metric-top">
+                            <div class="metric-label">Total de cargas</div>
+                            <div class="metric-icon"><i class="ti ti-package"></i></div>
+                        </div>
+                        <div class="metric-value">24</div>
+                        <div class="metric-sub">todas as cargas</div>
+                    </div>
+                    <div class="metric-card amber">
+                        <div class="metric-top">
+                            <div class="metric-label">Em viagem</div>
+                            <div class="metric-icon"><i class="ti ti-route"></i></div>
+                        </div>
+                        <div class="metric-value">9</div>
+                        <div class="metric-sub">em trânsito agora</div>
+                    </div>
+                    <div class="metric-card green">
+                        <div class="metric-top">
+                            <div class="metric-label">Concluídas</div>
+                            <div class="metric-icon"><i class="ti ti-circle-check"></i></div>
+                        </div>
+                        <div class="metric-value">15</div>
+                        <div class="metric-sub">entregues com sucesso</div>
+                    </div>
+                    <div class="metric-card teal">
+                        <div class="metric-top">
+                            <div class="metric-label">Motoristas ativos</div>
+                            <div class="metric-icon"><i class="ti ti-users"></i></div>
+                        </div>
+                        <div class="metric-value">6</div>
+                        <div class="metric-sub">de 10 cadastrados</div>
+                        <div class="progress-wrap" style="margin-top:8px;">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width:60%; background:#0F6E56;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Lista de cargas ── -->
+            <div>
+                <div class="section-head">
+                    <div class="section-title"><i class="ti ti-package"></i> Lista de cargas</div>
+                    <button class="btn"><i class="ti ti-external-link"></i> Ver todas</button>
+                </div>
+                <div class="card">
+                    <div class="tab-bar">
+                        <div class="tab active">Todas <span
+                                style="font-size:11px; margin-left:4px; color:var(--text-3);">24</span></div>
+                        <div class="tab">Em viagem <span
+                                style="font-size:11px; margin-left:4px; color:var(--text-3);">9</span></div>
+                        <div class="tab">Concluídas <span
+                                style="font-size:11px; margin-left:4px; color:var(--text-3);">15</span></div>
+                    </div>
+                    <div class="filter-row">
+                        <span class="filter-label">Filtrar por:</span>
+                        <select class="filter-select">
+                            <option>Todos os status</option>
+                            <option>Em viagem</option>
+                            <option>Concluído</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>Todas as origens</option>
+                            <option>São Paulo</option>
+                            <option>Rio de Janeiro</option>
+                        </select>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Invoice</th>
+                                    <th>PO</th>
+                                    <th>Nota fiscal</th>
+                                    <th>Origem</th>
+                                    <th>Localidade atual</th>
+                                    <th>Destino</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="td-mono">#001</td>
+                                    <td class="td-mono">100123</td>
+                                    <td><span class="td-link">PO-2025-001</span></td>
+                                    <td class="td-mono">NF-4521</td>
+                                    <td>São Paulo, SP</td>
+                                    <td>Curitiba, PR</td>
+                                    <td>Florianópolis, SC</td>
+                                    <td><span class="badge badge-amber">Em viagem</span></td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <button class="row-btn" title="Ver etapas"><i
+                                                    class="ti ti-eye"></i></button>
+                                            <button class="row-btn" title="Editar"><i class="ti ti-edit"></i></button>
+                                            <button class="row-btn danger" title="Excluir"><i
+                                                    class="ti ti-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">#002</td>
+                                    <td class="td-mono">100456</td>
+                                    <td><span class="td-link">PO-2025-002</span></td>
+                                    <td class="td-mono">NF-4522</td>
+                                    <td>Campinas, SP</td>
+                                    <td>Florianópolis, SC</td>
+                                    <td>Porto Alegre, RS</td>
+                                    <td><span class="badge badge-green">Concluído</span></td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <button class="row-btn" title="Ver etapas"><i
+                                                    class="ti ti-eye"></i></button>
+                                            <button class="row-btn" title="Editar"><i class="ti ti-edit"></i></button>
+                                            <button class="row-btn danger" title="Excluir"><i
+                                                    class="ti ti-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">#003</td>
+                                    <td class="td-mono">100789</td>
+                                    <td><span class="td-link">PO-2025-003</span></td>
+                                    <td class="td-mono">NF-4523</td>
+                                    <td>Rio de Janeiro, RJ</td>
+                                    <td>São Paulo, SP</td>
+                                    <td>Belo Horizonte, MG</td>
+                                    <td><span class="badge badge-amber">Em viagem</span></td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <button class="row-btn" title="Ver etapas"><i
+                                                    class="ti ti-eye"></i></button>
+                                            <button class="row-btn" title="Editar"><i class="ti ti-edit"></i></button>
+                                            <button class="row-btn danger" title="Excluir"><i
+                                                    class="ti ti-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">#004</td>
+                                    <td class="td-mono">100999</td>
+                                    <td><span class="td-link">PO-2025-004</span></td>
+                                    <td class="td-mono">NF-4524</td>
+                                    <td>Brasília, DF</td>
+                                    <td>Goiânia, GO</td>
+                                    <td>Uberlândia, MG</td>
+                                    <td><span class="badge badge-green">Concluído</span></td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <button class="row-btn" title="Ver etapas"><i
+                                                    class="ti ti-eye"></i></button>
+                                            <button class="row-btn" title="Editar"><i class="ti ti-edit"></i></button>
+                                            <button class="row-btn danger" title="Excluir"><i
+                                                    class="ti ti-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="td-mono">#005</td>
+                                    <td class="td-mono">101045</td>
+                                    <td><span class="td-link">PO-2025-005</span></td>
+                                    <td class="td-mono">NF-4525</td>
+                                    <td>Curitiba, PR</td>
+                                    <td>Joinville, SC</td>
+                                    <td>Porto Alegre, RS</td>
+                                    <td><span class="badge badge-amber">Em viagem</span></td>
+                                    <td>
+                                        <div class="row-actions">
+                                            <button class="row-btn" title="Ver etapas"><i
+                                                    class="ti ti-eye"></i></button>
+                                            <button class="row-btn" title="Editar"><i class="ti ti-edit"></i></button>
+                                            <button class="row-btn danger" title="Excluir"><i
+                                                    class="ti ti-trash"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Etapas + Motoristas ── -->
+            <div class="grid-2">
+
+                <!-- Etapas de transporte -->
+                <div>
+                    <div class="section-head">
+                        <div class="section-title"><i class="ti ti-map-pin"></i> Etapas de transporte</div>
+                        <button class="btn"><i class="ti ti-plus"></i> Nova etapa</button>
+                    </div>
+                    <div class="card">
+                        <div class="etapa-list">
+                            <div class="etapa-item">
+                                <div class="etapa-dot moving"><i class="ti ti-truck"></i></div>
+                                <div class="etapa-body">
+                                    <div class="etapa-carga">
+                                        Carga #001
+                                        <span class="badge badge-amber" style="font-size:10px; padding:2px 7px;">Em
+                                            viagem</span>
+                                    </div>
+                                    <div class="etapa-meta">
+                                        <i class="ti ti-user" style="font-size:13px;"></i> Carlos Silva
+                                        <span class="sep">·</span>
+                                        <i class="ti ti-steering-wheel" style="font-size:13px;"></i> ABC-1234
+                                        <span class="sep">·</span>
+                                        <i class="ti ti-truck" style="font-size:13px;"></i> XYZ-001
+                                    </div>
+                                    <div class="etapa-rota">
+                                        São Paulo <span class="arrow">→</span> Curitiba <span class="arrow">→</span>
+                                        <strong>Florianópolis</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="etapa-item">
+                                <div class="etapa-dot moving"><i class="ti ti-truck"></i></div>
+                                <div class="etapa-body">
+                                    <div class="etapa-carga">
+                                        Carga #003
+                                        <span class="badge badge-amber" style="font-size:10px; padding:2px 7px;">Em
+                                            viagem</span>
+                                    </div>
+                                    <div class="etapa-meta">
+                                        <i class="ti ti-user" style="font-size:13px;"></i> João Pereira
+                                        <span class="sep">·</span>
+                                        <i class="ti ti-steering-wheel" style="font-size:13px;"></i> DEF-5678
+                                        <span class="sep">·</span>
+                                        <i class="ti ti-truck" style="font-size:13px;"></i> XYZ-002, XYZ-003
+                                    </div>
+                                    <div class="etapa-rota">
+                                        Rio de Janeiro <span class="arrow">→</span> São Paulo <span
+                                            class="arrow">→</span> <strong>Belo Horizonte</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="etapa-item">
+                                <div class="etapa-dot done"><i class="ti ti-circle-check"></i></div>
+                                <div class="etapa-body">
+                                    <div class="etapa-carga">
+                                        Carga #002
+                                        <span class="badge badge-green"
+                                            style="font-size:10px; padding:2px 7px;">Concluído</span>
+                                    </div>
+                                    <div class="etapa-meta">
+                                        <i class="ti ti-user" style="font-size:13px;"></i> Maria Santos
+                                        <span class="sep">·</span>
+                                        <i class="ti ti-steering-wheel" style="font-size:13px;"></i> GHI-9012
+                                        <span class="sep">·</span>
+                                        <i class="ti ti-truck" style="font-size:13px;"></i> XYZ-004
+                                    </div>
+                                    <div class="etapa-rota">
+                                        Campinas <span class="arrow">→</span> Florianópolis <span class="arrow">→</span>
+                                        <strong>Porto Alegre</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="etapa-item">
+                                <div class="etapa-dot moving"><i class="ti ti-truck"></i></div>
+                                <div class="etapa-body">
+                                    <div class="etapa-carga">
+                                        Carga #005
+                                        <span class="badge badge-amber" style="font-size:10px; padding:2px 7px;">Em
+                                            viagem</span>
+                                    </div>
+                                    <div class="etapa-meta">
+                                        <i class="ti ti-user" style="font-size:13px;"></i> Roberto Lima
+                                        <span class="sep">·</span>
+                                        <i class="ti ti-steering-wheel" style="font-size:13px;"></i> JKL-3456
+                                        <span class="sep">·</span>
+                                        <i class="ti ti-truck" style="font-size:13px;"></i> XYZ-005
+                                    </div>
+                                    <div class="etapa-rota">
+                                        Curitiba <span class="arrow">→</span> Joinville <span class="arrow">→</span>
+                                        <strong>Porto Alegre</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Motoristas -->
+                <div>
+                    <div class="section-head">
+                        <div class="section-title"><i class="ti ti-users"></i> Motoristas</div>
+                        <button class="btn"><i class="ti ti-user-plus"></i> Cadastrar</button>
+                    </div>
+                    <div class="card">
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Motorista</th>
+                                        <th>CPF</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <span class="driver-avatar">CS</span>
+                                            Carlos Silva
+                                        </td>
+                                        <td class="td-mono">123.456.789-00</td>
+                                        <td><span class="badge badge-amber">Em viagem</span></td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button class="row-btn" title="Editar"><i
+                                                        class="ti ti-edit"></i></button>
+                                                <button class="row-btn danger" title="Excluir"><i
+                                                        class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="driver-avatar">MS</span>
+                                            Maria Santos
+                                        </td>
+                                        <td class="td-mono">987.654.321-00</td>
+                                        <td><span class="badge badge-green">Ocioso</span></td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button class="row-btn" title="Editar"><i
+                                                        class="ti ti-edit"></i></button>
+                                                <button class="row-btn danger" title="Excluir"><i
+                                                        class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="driver-avatar">JP</span>
+                                            João Pereira
+                                        </td>
+                                        <td class="td-mono">111.222.333-00</td>
+                                        <td><span class="badge badge-amber">Em viagem</span></td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button class="row-btn" title="Editar"><i
+                                                        class="ti ti-edit"></i></button>
+                                                <button class="row-btn danger" title="Excluir"><i
+                                                        class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="driver-avatar">AO</span>
+                                            Ana Oliveira
+                                        </td>
+                                        <td class="td-mono">444.555.666-00</td>
+                                        <td><span class="badge badge-gray">Indisponível</span></td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button class="row-btn" title="Editar"><i
+                                                        class="ti ti-edit"></i></button>
+                                                <button class="row-btn danger" title="Excluir"><i
+                                                        class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="driver-avatar">RL</span>
+                                            Roberto Lima
+                                        </td>
+                                        <td class="td-mono">555.666.777-00</td>
+                                        <td><span class="badge badge-amber">Em viagem</span></td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button class="row-btn" title="Editar"><i
+                                                        class="ti ti-edit"></i></button>
+                                                <button class="row-btn danger" title="Excluir"><i
+                                                        class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="driver-avatar">FM</span>
+                                            Felipe Melo
+                                        </td>
+                                        <td class="td-mono">888.999.000-00</td>
+                                        <td><span class="badge badge-green">Ocioso</span></td>
+                                        <td>
+                                            <div class="row-actions">
+                                                <button class="row-btn" title="Editar"><i
+                                                        class="ti ti-edit"></i></button>
+                                                <button class="row-btn danger" title="Excluir"><i
+                                                        class="ti ti-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /grid-2 -->
+
+        </main><!-- /content -->
+
+
+    </th:block>
+
+
+    <script>
+        /* Tab switching */
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                tab.closest('.tab-bar').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        /* Nav item switching */
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                if (!item.classList.contains('danger')) item.classList.add('active');
+            });
+        });
+    </script>
+
+</body>
+
+</html>

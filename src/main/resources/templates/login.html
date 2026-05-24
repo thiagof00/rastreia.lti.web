@@ -1,0 +1,60 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login — Rastreia LTI</title>
+    <link rel="stylesheet" th:href="@{/global.css}">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="login-card">
+        <div class="login-logo">
+            <div class="login-logo-icon"><i class="ti ti-route"></i></div>
+            <div class="login-logo-text">
+                <div class="name">RASTREIA.LTI</div>
+                <div class="sub">Sistema de rastreamento logístico</div>
+            </div>
+        </div>
+
+        <div class="login-heading">Bem-vindo de volta</div>
+        <p class="login-sub">Entre com suas credenciais para continuar.</p>
+
+        <div class="alert alert-error" id="login-error">
+            <i class="ti ti-alert-circle"></i>
+            Usuário ou senha inválidos. Tente novamente.
+        </div>
+
+
+        <form th:action="@{/login}" method="post">
+            <div class="field">
+                <label class="field-label" for="login-user">Usuário <span class="req">*</span></label>
+                <div class="input-wrap">
+                    <i class="ti ti-user icon-left"></i>
+                    <input type="text" id="login-user" name="usuario" placeholder="Digite seu usuário">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="field-label" for="login-pass">Senha <span class="req">*</span></label>
+                <div class="input-wrap has-right">
+                    <i class="ti ti-lock icon-left"></i>
+                    <input type="password" id="login-pass" name="password" placeholder="••••••••">
+                    <i class="ti ti-eye icon-right" id="toggle-pass"></i>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" style="margin-top:6px;" type="submit">
+                <i class="ti ti-login"></i> Entrar
+            </button>
+        </form>
+
+    </div>
+</body>
+
+
+</html>

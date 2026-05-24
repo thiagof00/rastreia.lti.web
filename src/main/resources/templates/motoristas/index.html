@@ -1,0 +1,181 @@
+<!-- templates/cargas.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+
+<body>
+    <th:block th:fragment="content">
+
+        <header class="topbar">
+            <div class="topbar-left">
+                <div class="page-title">Motoristas</div>
+                <div class="breadcrumb"><i class="ti ti-chevron-right" style="font-size:14px"></i><span>Gerenciar</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="search-wrap"><i class="ti ti-search"></i><input class="search-input"
+                        placeholder="Buscar por nome ou CPF..."></div>
+                <button class="btn btn-primary" onclick="openModal('modal-motorista-new')"><i
+                        class="ti ti-user-plus"></i>
+                    Cadastrar</button>
+            </div>
+        </header>
+        <main class="content">
+            <div class="stats-row cols-4">
+                <div class="stat-card">
+                    <div class="stat-icon si-purple"><i class="ti ti-users"></i></div>
+                    <div class="stat-body">
+                        <div class="stat-value" style="color:var(--purple-500)">10</div>
+                        <div class="stat-label">Total cadastrados</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon si-green"><i class="ti ti-circle-check"></i></div>
+                    <div class="stat-body">
+                        <div class="stat-value" style="color:var(--green-600)">3</div>
+                        <div class="stat-label">Ociosos</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon si-amber"><i class="ti ti-route"></i></div>
+                    <div class="stat-body">
+                        <div class="stat-value" style="color:var(--amber-600)">5</div>
+                        <div class="stat-label">Em viagem</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon si-gray"><i class="ti ti-circle-x"></i></div>
+                    <div class="stat-body">
+                        <div class="stat-value" style="color:var(--gray-600)">2</div>
+                        <div class="stat-label">Indisponíveis</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><i class="ti ti-list"></i> Lista de motoristas</div>
+                    <div class="card-actions">
+                        <select class="filter-select">
+                            <option>Todos os status</option>
+                            <option>Ocioso</option>
+                            <option>Em viagem</option>
+                            <option>Indisponível</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="sortable">ID</th>
+                                <th class="sortable">Motorista</th>
+                                <th>CPF</th>
+                                <th>Status</th>
+                                <th>Carga atual</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="td-mono">#M01</td>
+                                <td><span class="mini-avatar">CS</span>Carlos Silva</td>
+                                <td class="td-mono">123.456.789-00</td>
+                                <td><span class="badge badge-amber">Em viagem</span></td>
+                                <td><span style="color:var(--purple-500);font-weight:500">#001</span> — PO-2025-001</td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button class="row-btn edit" title="Editar"
+                                            onclick="openModal('modal-motorista-edit')"><i
+                                                class="ti ti-edit"></i></button>
+                                        <button class="row-btn del" title="Excluir"
+                                            onclick="openModal('modal-delete-cpf','Carlos Silva')"><i
+                                                class="ti ti-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-mono">#M02</td>
+                                <td><span class="mini-avatar">MS</span>Maria Santos</td>
+                                <td class="td-mono">987.654.321-00</td>
+                                <td><span class="badge badge-green">Ocioso</span></td>
+                                <td class="td-muted">—</td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button class="row-btn edit" title="Editar"
+                                            onclick="openModal('modal-motorista-edit')"><i
+                                                class="ti ti-edit"></i></button>
+                                        <button class="row-btn del" title="Excluir"
+                                            onclick="openModal('modal-delete-cpf','Maria Santos')"><i
+                                                class="ti ti-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-mono">#M03</td>
+                                <td><span class="mini-avatar">JP</span>João Pereira</td>
+                                <td class="td-mono">111.222.333-00</td>
+                                <td><span class="badge badge-amber">Em viagem</span></td>
+                                <td><span style="color:var(--purple-500);font-weight:500">#003</span> — PO-2025-003</td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button class="row-btn edit" title="Editar"
+                                            onclick="openModal('modal-motorista-edit')"><i
+                                                class="ti ti-edit"></i></button>
+                                        <button class="row-btn del" title="Excluir"
+                                            onclick="openModal('modal-delete-cpf','João Pereira')"><i
+                                                class="ti ti-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-mono">#M04</td>
+                                <td><span class="mini-avatar">AO</span>Ana Oliveira</td>
+                                <td class="td-mono">444.555.666-00</td>
+                                <td><span class="badge badge-gray">Indisponível</span></td>
+                                <td class="td-muted">—</td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button class="row-btn edit" title="Editar"
+                                            onclick="openModal('modal-motorista-edit')"><i
+                                                class="ti ti-edit"></i></button>
+                                        <button class="row-btn del" title="Excluir"
+                                            onclick="openModal('modal-delete-cpf','Ana Oliveira')"><i
+                                                class="ti ti-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="td-mono">#M05</td>
+                                <td><span class="mini-avatar">RL</span>Roberto Lima</td>
+                                <td class="td-mono">555.666.777-00</td>
+                                <td><span class="badge badge-amber">Em viagem</span></td>
+                                <td><span style="color:var(--purple-500);font-weight:500">#005</span> — PO-2025-005</td>
+                                <td>
+                                    <div class="row-actions">
+                                        <button class="row-btn edit" title="Editar"
+                                            onclick="openModal('modal-motorista-edit')"><i
+                                                class="ti ti-edit"></i></button>
+                                        <button class="row-btn del" title="Excluir"
+                                            onclick="openModal('modal-delete-cpf','Roberto Lima')"><i
+                                                class="ti ti-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pagination">
+                    <span class="pagination-info">Mostrando 1–5 de 10 registros</span>
+                    <div class="pagination-btns">
+                        <button class="page-btn" disabled><i class="ti ti-chevron-left"></i></button>
+                        <button class="page-btn active">1</button>
+                        <button class="page-btn">2</button>
+                        <button class="page-btn"><i class="ti ti-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </th:block>
+</body>
+
+</html>

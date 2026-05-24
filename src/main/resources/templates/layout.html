@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="layout(content)">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rastreia LTI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/global.css}">
+</head>
+
+<body>
+    <div class="app">
+
+        <!-- ══ SIDEBAR — definida uma vez, herdada por todos ══ -->
+        <aside class="sidebar">
+            <div class="sb-brand">
+                <div class="sb-brand-row">
+                    <div class="sb-icon"><i class="ti ti-route"></i></div>
+                    <span class="sb-name">RASTREIA.LTI</span>
+                </div>
+                <div class="sb-sub">Sistema de rastreamento</div>
+            </div>
+
+            <div class="sb-user">
+                <div class="avatar">AD</div>
+                <div>
+                    <div class="user-name">admin</div>
+                    <div class="user-role">Administrador</div>
+                </div>
+            </div>
+
+            <nav class="nav">
+                <div class="nav-label">Principal</div>
+                <div class="nav-item" th:classappend="${paginaAtiva == 'dashboard'} ? 'active'">
+                    <a th:href="@{/dashboard}"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
+                </div>
+
+                <div class="nav-label">Gerenciar</div>
+                <div class="nav-item" th:classappend="${paginaAtiva == 'cargas'} ? 'active'">
+                    <a th:href="@{/cargas}"><i class="ti ti-package"></i> Cargas</a>
+                </div>
+                <div class="nav-item" th:classappend="${paginaAtiva == 'etapas'} ? 'active'">
+                    <a th:href="@{/etapas}"><i class="ti ti-map-pin"></i> Etapas</a>
+                </div>
+                <div class="nav-item" th:classappend="${paginaAtiva == 'motoristas'} ? 'active'">
+                    <a th:href="@{/motoristas}"><i class="ti ti-user-check"></i> Motoristas</a>
+                </div>
+                <div class="nav-item" th:classappend="${paginaAtiva == 'caminhoes'} ? 'active'">
+                    <a th:href="@{/caminhoes}"><i class="ti ti-steering-wheel"></i> Caminhões</a>
+                </div>
+                <div class="nav-item" th:classappend="${paginaAtiva == 'carretas'} ? 'active'">
+                    <a th:href="@{/carretas}"><i class="ti ti-truck"></i> Carretas</a>
+                </div>
+            </nav>
+
+            <div class="sb-bottom">
+                <div class="nav-item danger">
+                    <a th:href="@{/}"><i class="ti ti-logout"></i> Sair</a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ══ CONTEÚDO DA PÁGINA ══ -->
+        <div class="main">
+            <th:block th:replace="${content}" />
+        </div>
+
+    </div>
+</body>
+
+</html>
