@@ -11,6 +11,7 @@
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/global.css}">
+    <link rel="stylesheet" th:href="@{/responsive.css}">
 </head>
 
 <body>
@@ -36,24 +37,27 @@
 
             <nav class="nav">
                 <div class="nav-label">Principal</div>
-                <div class="nav-item" th:classappend="${paginaAtiva == 'dashboard'} ? 'active'">
+                <div class="nav-item" data-tooltip="Dashboard"
+                    th:classappend="${paginaAtiva == 'dashboard'} ? 'active'">
                     <a th:href="@{/dashboard}"><i class="ti ti-layout-dashboard"></i> Dashboard</a>
                 </div>
 
                 <div class="nav-label">Gerenciar</div>
-                <div class="nav-item" th:classappend="${paginaAtiva == 'cargas'} ? 'active'">
+                <div class="nav-item" data-tooltip="Cargas" th:classappend="${paginaAtiva == 'cargas'} ? 'active'">
                     <a th:href="@{/cargas}"><i class="ti ti-package"></i> Cargas</a>
                 </div>
-                <div class="nav-item" th:classappend="${paginaAtiva == 'etapas'} ? 'active'">
+                <div class="nav-item" data-tooltip="Etapas" th:classappend="${paginaAtiva == 'etapas'} ? 'active'">
                     <a th:href="@{/etapas}"><i class="ti ti-map-pin"></i> Etapas</a>
                 </div>
-                <div class="nav-item" th:classappend="${paginaAtiva == 'motoristas'} ? 'active'">
+                <div class="nav-item" data-tooltip="Motoristas"
+                    th:classappend="${paginaAtiva == 'motoristas'} ? 'active'">
                     <a th:href="@{/motoristas}"><i class="ti ti-user-check"></i> Motoristas</a>
                 </div>
-                <div class="nav-item" th:classappend="${paginaAtiva == 'caminhoes'} ? 'active'">
+                <div class="nav-item" data-tooltip="Caminhões"
+                    th:classappend="${paginaAtiva == 'caminhoes'} ? 'active'">
                     <a th:href="@{/caminhoes}"><i class="ti ti-steering-wheel"></i> Caminhões</a>
                 </div>
-                <div class="nav-item" th:classappend="${paginaAtiva == 'carretas'} ? 'active'">
+                <div class="nav-item" data-tooltip="Carretas" th:classappend="${paginaAtiva == 'carretas'} ? 'active'">
                     <a th:href="@{/carretas}"><i class="ti ti-truck"></i> Carretas</a>
                 </div>
             </nav>

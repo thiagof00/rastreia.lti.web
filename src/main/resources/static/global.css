@@ -215,6 +215,16 @@ tbody tr:hover .row-actions {
   min-width: 0;
 }
 
+.content {
+  flex: 1;
+  overflow-y: auto;
+  /* scroll vertical aqui */
+  overflow-x: hidden;
+  padding: 22px 26px;
+  min-height: 0;
+  /* essencial — sem isso o flex ignora o overflow */
+}
+
 /* ═══════════════════════════════════════════
    SCREENS
 ═══════════════════════════════════════════ */
@@ -1648,9 +1658,15 @@ textarea::placeholder {
 ═══════════════════════════════════════ */
 
 /* ── Table ── */
-.table-wrap {
+.table-wrap,
+tbody,
+table {
   overflow-x: auto;
+  overflow-y: auto;
+  max-height: 40vh;
+  width: 100%;
 }
+
 
 table {
   width: 100%;
@@ -1669,6 +1685,10 @@ thead th {
   background: var(--gray-50);
   border-bottom: 1px solid var(--border);
   white-space: nowrap;
+
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .td-mono {
@@ -1762,11 +1782,6 @@ thead th {
   height: 20px;
   background: var(--border-md);
   margin: 0 2px;
-}
-
-/* ══ Table ══ */
-.table-wrap {
-  overflow-x: auto;
 }
 
 thead th.sortable {
@@ -2503,10 +2518,11 @@ thead th .sort-icon {
 .content {
   flex: 1;
   overflow-y: auto;
-  padding: 24px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  /* scroll vertical aqui */
+  overflow-x: hidden;
+  padding: 22px 26px;
+  min-height: 0;
+  /* essencial — sem isso o flex ignora o overflow */
 }
 
 /* ── Section header ── */
@@ -2673,6 +2689,7 @@ thead th .sort-icon {
   display: flex;
   flex-direction: column;
   gap: 18px;
+  min-height: 0;
 }
 
 .content::-webkit-scrollbar {

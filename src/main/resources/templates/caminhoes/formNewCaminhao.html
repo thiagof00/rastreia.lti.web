@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+
+<body>
+    <th:block th:fragment="content">
+
+        <form th:action="@{/novo-caminhao}" method="post" th:object="${caminhaoForm}" class="form-card">
+            <div class="form-card-header">
+                <div>
+                    <div class="form-card-title"><i class="ti ti-steering-wheel"></i> Cadastro de caminhão</div>
+                    <div class="form-card-subtitle">Preencha os dados do novo caminhão.</div>
+                </div>
+                <button class="btn btn-ghost btn-sm"><i class="ti ti-arrow-left"></i> Voltar</button>
+            </div>
+
+            <div class="form-card-body">
+                <div class="form-divider"><span>Identificação do veículo</span></div>
+                <div class="fields-grid">
+                    <div class="field">
+                        <label class="field-label">Placa <span class="req">*</span></label>
+                        <div class="input-wrap">
+                            <i class="ti ti-certificate icon-left"></i>
+                            <input th:field="*{placa}" type="text" placeholder="ABC-1234" maxlength="8"
+                                style="font-family:var(--mono); letter-spacing:1px; text-transform:uppercase;">
+                        </div>
+                        <div class="field-hint">Formato Mercosul ou antigo (ex: ABC1D23 ou ABC-1234).</div>
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Modelo / configuração <span class="req">*</span></label>
+                        <select th:field="*{modelo}">
+                            <option value="">Selecione o tipo</option>
+                            <option value="Toco">Toco</option>
+                            <option value="Truck">Truck</option>
+                            <option value="Bitruck">Bitruck</option>
+                            <option value="Cavalo Mecânico 4×2">Cavalo Mecânico 4×2</option>
+                            <option value="Cavalo Mecânico 6×2">Cavalo Mecânico 6×2</option>
+                            <option value="Cavalo Mecânico 6×4">Cavalo Mecânico 6×4</option>
+                            <option value="Cavalo Mecânico 8x4">Cavalo Mecânico 8x4</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label class="field-label">Marca do caminhão <span class="req">*</span></label>
+                        <input th:field="*{marca}" type="text" placeholder="Scania"
+                            style="font-family:var(--mono); letter-spacing:1px;">
+                    </div>
+                </div>
+
+                <div class=" form-divider"><span>Status</span>
+                </div>
+                <div class="field">
+                    <label class="field-label">Status inicial <span class="req">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option status-ocioso">
+                            <input type="radio" name="status-caminhao" id="sc-ocioso" checked>
+                            <label class="radio-label" for="sc-ocioso"><i class="ti ti-circle-check"></i>
+                                Ocioso</label>
+                        </div>
+                        <div class="radio-option status-manut">
+                            <input type="radio" name="status-caminhao" id="sc-manut">
+                            <label class="radio-label" for="sc-manut"><i class="ti ti-tool"></i> Em
+                                manutenção</label>
+                        </div>
+                        <div class="radio-option status-viagem">
+                            <input type="radio" name="status-caminhao" id="sc-viagem">
+                            <label class="radio-label" for="sc-viagem"><i class="ti ti-route"></i> Em
+                                viagem</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <span></span>
+                <div class="form-footer-right">
+                    <button class="btn btn-cancel"><i class="ti ti-x"></i> Cancelar</button>
+                    <button class="btn btn-submit"><i class="ti ti-check"></i> Cadastrar caminhão</button>
+                </div>
+            </div>
+        </form>
+
+
+    </th:block>
+</body>
+
+</html>
