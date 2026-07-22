@@ -48,10 +48,10 @@ jobs:
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
         run: |
-          scp target/*.jar $SSH_HOST:/opt/rastreia-lti/app.jar.new
+          scp target/*.jar $SSH_HOST:/opt/deploy-rti/app.jar.new
 
       - name: Reiniciar aplicação
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
         run: |
-          ssh $SSH_HOST 'sudo mv /opt/rastreia-lti/app.jar.new /opt/rastreia-lti/app.jar && sudo systemctl restart rastreia-lti.service'
+          ssh $SSH_HOST 'sudo mv /opt/deploy-rti/app.jar.new /opt/deploy-rti/app.jar && sudo systemctl restart rastreia-lti.service'
