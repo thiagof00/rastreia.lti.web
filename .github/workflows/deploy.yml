@@ -1,0 +1,57 @@
+name: Deploy Rastreia.lti.web
+
+on:
+  push:
+    branches: [prod]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Build com Maven
+        run: mvn clean package -DskipTests
+
+      - name: Instalar cloudflared
+        run: |
+          curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
+          chmod +x cloudflared
+          sudo mv cloudflared /usr/local/bin/
+
+      - name: Setup SSH
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          cat >> ~/.ssh/config <<EOF
+          Host $SSH_HOST
+            ProxyCommand cloudflared access ssh --hostname %h
+            IdentityFile ~/.ssh/deploy_key
+            User $SSH_USER
+            StrictHostKeyChecking no
+          EOF
+
+      - name: Enviar JAR pro servidor
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          scp target/*.jar $SSH_HOST:/opt/rastreia-lti/app.jar.new
+
+      - name: Reiniciar aplicação
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        run: |
+          ssh $SSH_HOST 'sudo mv /opt/rastreia-lti/app.jar.new /opt/rastreia-lti/app.jar && sudo systemctl restart rastreia-lti.service'
