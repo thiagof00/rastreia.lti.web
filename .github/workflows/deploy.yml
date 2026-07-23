@@ -54,4 +54,4 @@ jobs:
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
         run: |
-          ssh $SSH_HOST ' mv /opt/deploy-rti/app.jar.new /opt/deploy-rti/app.jar && sudo systemctl restart rastreia-lti.service'
+          ssh $SSH_HOST 'mv /opt/deploy-rti/app.jar.new /opt/deploy-rti/app.jar && sudo /usr/bin/systemctl restart rastreia-lti.service'
