@@ -50,6 +50,16 @@ jobs:
         run: |
           scp target/*.jar $SSH_HOST:/opt/deploy-rti/app.jar.new
 
+      - name: Diagnóstico
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          ssh ${SSH_USER}@${SSH_HOST} "
+          whoami
+          sudo -l
+          sudo -n /opt/deploy-rti/deploy.sh
+          "
       - name: Deploy
         env:
           SSH_HOST: ${{ secrets.SSH_HOST }}
