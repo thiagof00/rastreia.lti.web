@@ -90,3 +90,4 @@ Desktop.ini
 .env
 .env.*
 secrets.properties
+application.properties

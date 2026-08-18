@@ -1,4 +1,3 @@
-<!-- templates/login.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
@@ -25,7 +24,18 @@
         <div class="login-heading">Bem-vindo de volta</div>
         <p class="login-sub">Entre com suas credenciais para continuar.</p>
 
-        <div class="alert alert-error" id="login-error">
+        <div class="alert alert-error" id="login-error-limite"
+            th:if="${param.erro != null and param.erro[0] == 'muitas_tentativas'}">
+            <i class="ti ti-alert-circle"></i>
+            Muitas tentativas de acesso. Aguarde alguns minutos e tente novamente.
+        </div>
+        <div class="alert alert-error" id="login-error-bloqueio"
+            th:if="${param.erro != null and param.erro[0] == 'bloqueado'}">
+            <i class="ti ti-alert-circle"></i>
+            Muitas tentativas incorretas. Tente novamente em alguns minutos.
+        </div>
+        <div class="alert alert-error" id="login-error"
+            th:if="${param.erro != null and param.erro[0] != 'bloqueado' and param.erro[0] != 'muitas_tentativas'}">
             <i class="ti ti-alert-circle"></i>
             Usuário ou senha inválidos. Tente novamente.
         </div>
