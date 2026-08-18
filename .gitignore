@@ -91,3 +91,4 @@ Desktop.ini
 .env.*
 secrets.properties
 application.properties
+DadosIniciais.java
