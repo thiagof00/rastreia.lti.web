@@ -15,7 +15,8 @@
             <div class="topbar-right">
                 <div class="search-wrap"><i class="ti ti-search"></i><input class="search-input"
                         placeholder="Buscar por placa ou tipo..."></div>
-                <button class="btn btn-primary" onclick="openModal('modal-carreta-new')"><i class="ti ti-plus"></i>
+                <button class="btn btn-primary" th:onclick="|window.location.href='@{/nova-carreta}'|"><i
+                        class="ti ti-plus"></i>
                     Cadastrar</button>
             </div>
         </header>
@@ -62,10 +63,15 @@
                         </select>
                         <select class="filter-select">
                             <option>Todos os tipos</option>
-                            <option>Baú</option>
-                            <option>Frigorífico</option>
-                            <option>Graneleiro</option>
-                            <option>Sider</option>
+                            <option value="Sider">Sider</option>
+                            <option value="Grade alta">Grade alta</option>
+                            <option value="Grade baixa">Grade baixa</option>
+                            <option value="Bau">Bau</option>
+                            <option value="3 eixos">3 eixos</option>
+                            <option value="4 eixo">4 eixo</option>
+                            <option value="3 eixos espaçado">3 eixos espaçado(Vanderleia)</option>
+                            <option value="Bitrem">Bitrem</option>
+                            <option value="Rodotrem">Rodotrem</option>
                         </select>
                     </div>
                 </div>
@@ -84,12 +90,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="td-mono">#R01</td>
-                                <td class="td-mono" style="font-weight:600;letter-spacing:1px">XYZ-001</td>
-                                <td>Baú</td>
-                                <td class="td-mono">30.000</td>
-                                <td class="td-mono">14</td>
+                            <tr th:each="carreta : ${carretas}">
+                                <td th:text="${carreta.id}" class="td-mono">#R01</td>
+                                <td th:text="${carreta.getPlaca()}" class="td-mono"
+                                    style="font-weight:600;letter-spacing:1px">XYZ-001</td>
+                                <td th:text="${carreta.getTipo()}">Baú</td>
+                                <td th:text="${carreta.getPesoMax()}" class="td-mono">30.000</td>
+                                <td th:text="${carreta.getMetragem()}" class="td-mono">14</td>
                                 <td><span class="badge badge-amber">Em viagem</span></td>
                                 <td>Carga <span style="color:var(--purple-500);font-weight:500">#001</span></td>
                                 <td>
@@ -99,82 +106,6 @@
                                                 class="ti ti-edit"></i></button>
                                         <button class="row-btn del" title="Excluir"
                                             onclick="openModal('modal-delete-generic','carreta XYZ-001')"><i
-                                                class="ti ti-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td-mono">#R02</td>
-                                <td class="td-mono" style="font-weight:600;letter-spacing:1px">XYZ-002</td>
-                                <td>Frigorífico</td>
-                                <td class="td-mono">24.000</td>
-                                <td class="td-mono">12</td>
-                                <td><span class="badge badge-amber">Em viagem</span></td>
-                                <td>Carga <span style="color:var(--purple-500);font-weight:500">#001</span></td>
-                                <td>
-                                    <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-carreta-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-generic','carreta XYZ-002')"><i
-                                                class="ti ti-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td-mono">#R03</td>
-                                <td class="td-mono" style="font-weight:600;letter-spacing:1px">XYZ-003</td>
-                                <td>Graneleiro</td>
-                                <td class="td-mono">35.000</td>
-                                <td class="td-mono">15</td>
-                                <td><span class="badge badge-green">Ocioso</span></td>
-                                <td class="td-muted">—</td>
-                                <td>
-                                    <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-carreta-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-generic','carreta XYZ-003')"><i
-                                                class="ti ti-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td-mono">#R04</td>
-                                <td class="td-mono" style="font-weight:600;letter-spacing:1px">XYZ-004</td>
-                                <td>Sider</td>
-                                <td class="td-mono">27.000</td>
-                                <td class="td-mono">13</td>
-                                <td><span class="badge badge-blue">Em manutenção</span></td>
-                                <td class="td-muted">—</td>
-                                <td>
-                                    <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-carreta-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-generic','carreta XYZ-004')"><i
-                                                class="ti ti-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td-mono">#R05</td>
-                                <td class="td-mono" style="font-weight:600;letter-spacing:1px">XYZ-005</td>
-                                <td>Tanque</td>
-                                <td class="td-mono">32.000</td>
-                                <td class="td-mono">14</td>
-                                <td><span class="badge badge-green">Ocioso</span></td>
-                                <td class="td-muted">—</td>
-                                <td>
-                                    <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-carreta-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-generic','carreta XYZ-005')"><i
                                                 class="ti ti-trash"></i></button>
                                     </div>
                                 </td>
