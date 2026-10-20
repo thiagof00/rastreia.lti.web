@@ -92,8 +92,10 @@
                                         <button class="row-btn edit" title="Editar"
                                             onclick="openModal('modal-caminhao-edit')"><i
                                                 class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-generic','caminhão ABC-1234')"><i
+                                        <button type="button" class="row-btn del" title="Excluir"
+                                            th:data-nome="|caminhão ${caminhao.placa}|"
+                                            th:data-action="@{/excluir-caminhao/{id}(id=${caminhao.id})}"
+                                            onclick="openModal('modal-delete', this)"><i
                                                 class="ti ti-trash"></i></button>
                                     </div>
                                 </td>

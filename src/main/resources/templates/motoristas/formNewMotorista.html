@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar carreta</title>
+</head>
+
+<body>
+
+    <th:block th:fragment="content">
+        <form th:action="@{/novo-motorista}" method="post" th:object="${motoristaForm}" class="form-card">
+            <div class="form-card-header">
+                <div>
+                    <div class="form-card-title"><i class="ti ti-steering-wheel"></i> Cadastro de motorista</div>
+                    <div class="form-card-subtitle">Preencha os dados da novo motorista.</div>
+                </div>
+                <button class="btn btn-ghost btn-sm"><i class="ti ti-arrow-left"></i> Voltar</button>
+            </div>
+
+            <div class="form-card-body">
+                <div class="form-divider"><span>Identificação</span></div>
+                <div class="fields-grid">
+                    <div class="field">
+                        <label class="field-label">Nome <span class="req">*</span></label>
+                        <div class="input-wrap">
+                            <i class="ti ti-certificate icon-left"></i>
+                            <input th:field="*{nome}" type="text" placeholder="ABC-1234" maxlength="8"
+                                style="font-family:var(--mono); letter-spacing:1px; text-transform:uppercase;">
+                        </div>
+                        <div class="field-hint">Apenas primeiro nome ou composto</div>
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label">Sobrenome <span class="req">*</span></label>
+                        <div class="input-wrap">
+                            <i class="ti ti-certificate icon-left"></i>
+                            <input th:field="*{sobrenome}" type="text" placeholder="ABC-1234" maxlength="8"
+                                style="font-family:var(--mono); letter-spacing:1px; text-transform:uppercase;">
+                        </div>
+                        <div class="field-hint">Apenas o último</div>
+                    </div>
+
+                    <div class="field">
+                        <label class="field-label">CPF <span class="req">*</span></label>
+                        <div class="input-wrap">
+                            <i class="ti ti-certificate icon-left"></i>
+                            <input th:field="*{cpf}" type="text" placeholder="ABC-1234" maxlength="8"
+                                style="font-family:var(--mono); letter-spacing:1px; text-transform:uppercase;">
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <label for="field-label">CNH</label>
+                        <div class="input-wrap">
+                            <i class="ti ti-certificate icon-left"></i>
+                            <input th:field="*{cnh}" type="text" placeholder="20000" maxlength="6"
+                                style="font-family:var(--mono); letter-spacing:1px; text-transform:uppercase;">
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- <div class=" form-divider"><span>Status</span>
+                </div>
+                <div class="field">
+                    <label class="field-label">Status inicial <span class="req">*</span></label>
+                    <div class="radio-group">
+                        <div class="radio-option status-ocioso">
+                            <input type="radio" name="status-caminhao" id="sc-ocioso" checked>
+                            <label class="radio-label" for="sc-ocioso"><i class="ti ti-circle-check"></i>
+                                Ocioso</label>
+                        </div>
+                        <div class="radio-option status-manut">
+                            <input type="radio" name="status-caminhao" id="sc-manut">
+                            <label class="radio-label" for="sc-manut"><i class="ti ti-tool"></i> Em
+                                manutenção</label>
+                        </div>
+                        <div class="radio-option status-viagem">
+                            <input type="radio" name="status-caminhao" id="sc-viagem">
+                            <label class="radio-label" for="sc-viagem"><i class="ti ti-route"></i> Em
+                                viagem</label>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+
+            <div class="form-footer">
+                <span></span>
+                <div class="form-footer-right">
+                    <button class="btn btn-cancel"><i class="ti ti-x"></i> Cancelar</button>
+                    <button class="btn btn-submit"><i class="ti ti-check"></i> Cadastrar motorista</button>
+                </div>
+            </div>
+        </form>
+
+
+    </th:block>
+
+</body>
+
+</html>
