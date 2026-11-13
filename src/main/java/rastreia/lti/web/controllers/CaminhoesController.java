@@ -2,12 +2,16 @@ package rastreia.lti.web.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -72,4 +76,26 @@ public class CaminhoesController {
         }
         return "redirect:/caminhoes";
     }
+
+    @PostMapping("/editar-caminhao/{id}")
+    public Object alterarCaminhao(@PathVariable Long id, @ModelAttribute Caminhao dados) {
+        Caminhao caminhao = caminhaoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        caminhao.setPlaca(dados.getPlaca());
+        caminhao.setMarca(dados.getMarca());
+        caminhao.setModelo(dados.getModelo());
+
+        try {
+            caminhaoRepository.save(caminhao);
+            return "redirect:/caminhoes";
+        } catch (Exception e) {
+            ModelAndView mv = new ModelAndView("caminhoes/form");
+            mv.addObject("paginaAtiva", "caminhoes");
+            mv.addObject("caminhaoForm", caminhao);
+            mv.addObject("erro", "Erro ao cadastrar: " + e.getMessage());
+            return mv;
+        }
+    }
+
 }
