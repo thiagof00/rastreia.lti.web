@@ -12,9 +12,11 @@
     <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/global.css}">
     <link rel="stylesheet" th:href="@{/responsive.css}">
+
 </head>
 
 <body>
+
     <div class="app">
 
         <!-- ══ SIDEBAR — definida uma vez, herdada por todos ══ -->
@@ -75,6 +77,70 @@
         </div>
 
     </div>
+
+    <div class="modal-overlay" id="modal-delete" onclick="if (event.target === this) closeModal('modal-delete')">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title"><i class="ti ti-trash"></i> Confirmar exclusão</div>
+                <button type="button" class="modal-close" onclick="closeModal('modal-delete')">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+            <form method="post">
+                <div class="modal-body">
+                    <div class="delete-icon"><i class="ti ti-alert-triangle"></i></div>
+                    <div class="delete-msg">
+                        <p>Tem certeza que deseja excluir <strong data-modal-nome></strong>?</p>
+                        <p>Esta ação não pode ser desfeita.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-cancel" onclick="closeModal('modal-delete')">Cancelar</button>
+                    <button type="submit" class="btn btn-danger"><i class="ti ti-trash"></i> Excluir</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
+
+    <script>
+        function openModal(id, origem) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            if (origem) {
+                const nome = modal.querySelector('[data-modal-nome]');
+                const form = modal.querySelector('form');
+                if (nome) nome.textContent = origem.dataset.nome;
+                if (form) {
+                    form.reset()
+                    form.action = origem.dataset.action
+                    Object.entries(origem.dataset).forEach(([chave, valor]) => {
+                        form.querySelectorAll(`[name=${chave}]`).forEach(campo => {
+                            if (campo.type === 'radio') campo.checked = campo.value === valor
+                            else campo.value = valor
+                        })
+                    })
+                }
+            }
+            modal.classList.add('open');
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            if (modal) modal.classList.remove('open');
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+            }
+        });
+
+
+    </script>
+
 </body>
 
 </html>

@@ -84,16 +84,20 @@
                                 <td th:text="${caminhao.id}" class="td-mono">#C01</td>
                                 <td th:text="${caminhao.getPlaca()}" class="td-mono"
                                     style="font-weight:600;letter-spacing:1px">ABC-1234</td>
-                                <td th:text="${caminhao.getModelo()}">Cavalo Mecânico 6×4</td>
+                                <td th:text="${caminhao.getModelo()}">Cavalo Mecânico 6x4</td>
                                 <td><span class="badge badge-amber">Em viagem</span></td>
                                 <td>Carga <span style="color:var(--purple-500);font-weight:500">#001</span></td>
                                 <td>
                                     <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-caminhao-edit')"><i
+                                        <button type="button" class="row-btn edit" title="Editar"
+                                            th:onclick="|location.href='@{/editar-caminhao/{id}(id=${caminhao.getId()})}'|"><i
                                                 class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-generic','caminhão ABC-1234')"><i
+
+
+                                        <button type="button" class="row-btn del" title="Excluir"
+                                            th:data-nome="|caminhão ${caminhao.placa}|"
+                                            th:data-action="@{/excluir-caminhao/{id}(id=${caminhao.id})}"
+                                            onclick="openModal('modal-delete', this)"><i
                                                 class="ti ti-trash"></i></button>
                                     </div>
                                 </td>
