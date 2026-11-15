@@ -4,11 +4,15 @@
 <body>
     <th:block th:fragment="content">
 
-        <form th:action="@{/novo-caminhao}" method="post" th:object="${caminhaoForm}" class="form-card">
+        <form
+            th:action="${caminhaoForm.id == null} ? @{/novo-caminhao} : @{/editar-caminhao/{id}(id=${caminhaoForm.id})}"
+            method="post" th:object="${caminhaoForm}" class="form-card">
             <div class="form-card-header">
                 <div>
-                    <div class="form-card-title"><i class="ti ti-steering-wheel"></i> Cadastro de caminhão</div>
-                    <div class="form-card-subtitle">Preencha os dados do novo caminhão.</div>
+                    <div class="form-card-title"><i class="ti ti-steering-wheel"></i> <span
+                            th:text="${caminhaoForm.id == null} ? 'Cadastro de caminhão' : 'Alterar caminhão' "></span>
+                    </div>
+                    <div class="form-card-subtitle">Preencha os dados do caminhão.</div>
                 </div>
                 <button class="btn btn-ghost btn-sm"><i class="ti ti-arrow-left"></i> Voltar</button>
             </div>
@@ -73,7 +77,8 @@
                 <span></span>
                 <div class="form-footer-right">
                     <button class="btn btn-cancel"><i class="ti ti-x"></i> Cancelar</button>
-                    <button class="btn btn-submit"><i class="ti ti-check"></i> Cadastrar caminhão</button>
+                    <button class="btn btn-submit"><i class="ti ti-check"></i> <span
+                            th:text="${caminhaoForm.id == null} ? 'Cadastrar de caminhão' : 'Alterar caminhão'"></span></button>
                 </div>
             </div>
         </form>

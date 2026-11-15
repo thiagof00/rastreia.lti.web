@@ -89,8 +89,8 @@
                                 <td>
                                     <div class="row-actions">
                                         <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-motorista-edit')"><i
-                                                class="ti ti-edit"></i></button>
+                                            th:onclick="|location.href='@{/editar-motorista/{id}(id=${motorista.getId()})}'|">
+                                            <i class="ti ti-edit"></i></button>
                                         <button type="button" class="row-btn del" title="Excluir"
                                             th:data-nome="|${motorista.nome} ${motorista.sobrenome}|"
                                             th:data-action="@{/excluir-motorista/{id}(id=${motorista.id})}"

@@ -12,9 +12,11 @@
     <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/global.css}">
     <link rel="stylesheet" th:href="@{/responsive.css}">
+
 </head>
 
 <body>
+
     <div class="app">
 
         <!-- ══ SIDEBAR — definida uma vez, herdada por todos ══ -->
@@ -100,79 +102,8 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="modal-caminhao-edit"
-        onclick="if (event.target === this) closeModal('modal-caminhao-edit')">
-        <div class="modal">
-            <div class="modal-header">
-                <div class="modal-title"><i class="ti ti-pen"></i> Editar caminhao</div>
-                <button type="button" class="modal-close" onclick="closeModal('modal-caminhao-edit')">
-                    <i class="ti ti-x"></i>
-                </button>
-            </div>
-            <form method="post">
-                <div class="modal-body">
-                    <div class="form-card-body">
-                        <div class="fields-grid">
-                            <div class="field">
-                                <label class="field-label">Placa <span class="req">*</span></label>
-                                <div class="input-wrap">
-                                    <i class="ti ti-certificate icon-left"></i>
-                                    <input name="placa" type="text" placeholder="ABC-1234" maxlength="8"
-                                        style="font-family:var(--mono); letter-spacing:1px; text-transform:uppercase;">
-                                </div>
-                                <div class="field-hint">Formato Mercosul ou antigo (ex: ABC1D23 ou ABC-1234).</div>
-                            </div>
-                            <div class="field">
-                                <label class="field-label">Modelo / configuração <span class="req">*</span></label>
-                                <select name="modelo">
-                                    <option value="">Selecione o tipo</option>
-                                    <option value="Toco">Toco</option>
-                                    <option value="Truck">Truck</option>
-                                    <option value="Bitruck">Bitruck</option>
-                                    <option value="Cavalo Mecânico 4x2">Cavalo Mecânico 4x2</option>
-                                    <option value="Cavalo Mecânico 6x2">Cavalo Mecânico 6x2</option>
-                                    <option value="Cavalo Mecânico 6x4">Cavalo Mecânico 6x4</option>
-                                    <option value="Cavalo Mecânico 8x4">Cavalo Mecânico 8x4</option>
-                                </select>
-                            </div>
-                            <div class="field">
-                                <label class="field-label">Marca do caminhão <span class="req">*</span></label>
-                                <input name="marca" type="text" placeholder="Scania"
-                                    style="font-family:var(--mono); letter-spacing:1px;">
-                            </div>
-                        </div>
 
-                        <div class="form-divider"><span>Status</span></div>
-                        <div class="field">
-                            <label class="field-label">Status <span class="req">*</span></label>
-                            <div class="radio-group">
-                                <div class="radio-option status-ocioso">
-                                    <input type="radio" name="status" value="OCIOSO" id="sc-ocioso">
-                                    <label class="radio-label" for="sc-ocioso">
-                                        <i class="ti ti-circle-check"></i> Ocioso</label>
-                                </div>
-                                <div class="radio-option status-manut">
-                                    <input type="radio" name="status" value="MANUTENCAO" id="sc-manut">
-                                    <label class="radio-label" for="sc-manut">
-                                        <i class="ti ti-tool"></i> Em manutenção</label>
-                                </div>
-                                <div class="radio-option status-viagem">
-                                    <input type="radio" name="status" value="EM_VIAGEM" id="sc-viagem">
-                                    <label class="radio-label" for="sc-viagem">
-                                        <i class="ti ti-route"></i> Em viagem</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-cancel"
-                        onclick="closeModal('modal-caminhao-edit')">Cancelar</button>
-                    <button type="submit" class="btn btn-submit"><i class="ti ti-pen"></i> Alterar</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     <script>
         function openModal(id, origem) {
@@ -206,7 +137,10 @@
                 document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
             }
         });
+
+
     </script>
+
 </body>
 
 </html>

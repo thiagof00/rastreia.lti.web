@@ -90,11 +90,7 @@
                                 <td>
                                     <div class="row-actions">
                                         <button type="button" class="row-btn edit" title="Editar"
-                                            th:data-nome="|caminhão ${caminhao.placa}|"
-                                            th:data-action="@{/editar-caminhao/{id}(id=${caminhao.id})}"
-                                            th:data-placa="${caminhao.placa}" th:data-modelo="${caminhao.modelo}"
-                                            th:data-marca="${caminhao.marca}"
-                                            onclick="openModal('modal-caminhao-edit', this)"><i
+                                            th:onclick="|location.href='@{/editar-caminhao/{id}(id=${caminhao.getId()})}'|"><i
                                                 class="ti ti-edit"></i></button>
 
 

@@ -101,11 +101,14 @@
                                 <td>Carga <span style="color:var(--purple-500);font-weight:500">#001</span></td>
                                 <td>
                                     <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-carreta-edit')"><i
-                                                class="ti ti-edit"></i></button>
+                                        <button class="row-btn edit" title="Editar" type="button"
+                                            th:onclick="|location.href='@{/editar-carreta/{id}(id=${carreta.getId()})}'|">
+                                            <i class="ti ti-edit"></i></button>
+
+
+
                                         <button type="button" class="row-btn del" title="Excluir"
-                                            th:data-nome="|carreta ${carreta.placa}|"
+                                            th:data-nome="|${carreta.placa}|"
                                             th:data-action="@{/excluir-carreta/{id}(id=${carreta.id})}"
                                             onclick="openModal('modal-delete', this)"><i
                                                 class="ti ti-trash"></i></button>

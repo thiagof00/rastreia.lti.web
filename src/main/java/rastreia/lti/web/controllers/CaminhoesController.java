@@ -3,13 +3,11 @@ package rastreia.lti.web.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
@@ -53,7 +51,7 @@ public class CaminhoesController {
             caminhaoRepository.save(caminhao);
             return "redirect:/caminhoes";
         } catch (Exception e) {
-            ModelAndView mv = new ModelAndView("caminhoes/form");
+            ModelAndView mv = new ModelAndView("caminhoes/formNewCaminhao");
             mv.addObject("paginaAtiva", "caminhoes");
             mv.addObject("caminhaoForm", caminhao);
             mv.addObject("erro", "Erro ao cadastrar: " + e.getMessage());
@@ -63,18 +61,13 @@ public class CaminhoesController {
 
     }
 
-    @PostMapping("/excluir-caminhao/{id}")
-    public String deleteCaminhao(@PathVariable Long id, RedirectAttributes redirect) {
-
-        try {
-            caminhaoRepository.deleteById(id);
-            redirect.addFlashAttribute("sucesso", "Caminhão excluído com sucesso.");
-        } catch (DataIntegrityViolationException e) {
-            redirect.addFlashAttribute("erro", "Não é possível excluir: o caminhão está vinculado a outros registros.");
-        } catch (Exception e) {
-            redirect.addFlashAttribute("erro", "Erro ao excluir: " + e.getMessage());
-        }
-        return "redirect:/caminhoes";
+    @GetMapping("/editar-caminhao/{id}")
+    public ModelAndView alterarCaminhao(@PathVariable Long id) {
+        ModelAndView mv = new ModelAndView("caminhoes/formNewCaminhao");
+        Caminhao caminhao = caminhaoRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        mv.addObject("caminhaoForm", caminhao);
+        return mv;
     }
 
     @PostMapping("/editar-caminhao/{id}")
@@ -96,6 +89,20 @@ public class CaminhoesController {
             mv.addObject("erro", "Erro ao cadastrar: " + e.getMessage());
             return mv;
         }
+    }
+
+    @PostMapping("/excluir-caminhao/{id}")
+    public String deleteCaminhao(@PathVariable Long id, RedirectAttributes redirect) {
+
+        try {
+            caminhaoRepository.deleteById(id);
+            redirect.addFlashAttribute("sucesso", "Caminhão excluído com sucesso.");
+        } catch (DataIntegrityViolationException e) {
+            redirect.addFlashAttribute("erro", "Não é possível excluir: o caminhão está vinculado a outros registros.");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("erro", "Erro ao excluir: " + e.getMessage());
+        }
+        return "redirect:/caminhoes";
     }
 
 }

@@ -10,13 +10,19 @@
 <body>
 
     <th:block th:fragment="content">
-        <form th:action="@{/nova-carreta}" method="post" th:object="${carretaForm}" class="form-card">
+        <form th:action="${carretaForm.id == null} ? @{/nova-carreta} : @{/editar-carreta/{id}(id=${carretaForm.id})}"
+            method="post" th:object="${carretaForm}" class="form-card">
             <div class="form-card-header">
                 <div>
-                    <div class="form-card-title"><i class="ti ti-steering-wheel"></i> Cadastro de carreta</div>
-                    <div class="form-card-subtitle">Preencha os dados da nova carreta.</div>
+                    <div class="form-card-title"><i class="ti ti-steering-wheel"></i>
+                        <span th:text="${carretaForm.id == null} ? 'Cadastro de carreta' : 'Edição de carreta'"></span>
+                    </div>
+                    <div class="form-card-subtitle"
+                        th:text="${carretaForm.id == null} ? 'Preencha os dados da nova carreta.' : 'Altere os dados da carreta.'">
+                    </div>
                 </div>
-                <button class="btn btn-ghost btn-sm"><i class="ti ti-arrow-left"></i> Voltar</button>
+                <button class="btn btn-ghost btn-sm"><i class="ti ti-arrow-left" th:href="@{/carretas}"></i>
+                    Voltar</button>
             </div>
 
             <div class="form-card-body">
@@ -96,7 +102,8 @@
                 <span></span>
                 <div class="form-footer-right">
                     <button class="btn btn-cancel"><i class="ti ti-x"></i> Cancelar</button>
-                    <button class="btn btn-submit"><i class="ti ti-check"></i> Cadastrar carreta</button>
+                    <button class="btn btn-submit"><i class="ti ti-check"></i> <span
+                            th:text="${carretaForm.id == null} ? 'Cadastrar carreta' : 'Alterar carreta'"></span></button>
                 </div>
             </div>
         </form>

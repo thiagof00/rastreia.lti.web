@@ -1,12 +1,16 @@
 package rastreia.lti.web.controllers;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,12 +46,23 @@ public class CarretasController {
             carretasRepository.save(carreta);
             return "redirect:/carretas";
         } catch (Exception e) {
-            ModelAndView mv = new ModelAndView("carretas/form");
+            ModelAndView mv = new ModelAndView("carretas/formNewCarreta");
             mv.addObject("paginaAtiva", "carretas");
             mv.addObject("carretasForm", carreta);
             mv.addObject("erro", "Erro ao cadastrar: " + e.getMessage());
             return mv;
         }
+    }
+
+    @GetMapping("/editar-carreta/{id}")
+    public ModelAndView editarCarreta(@PathVariable Long id) {
+        Carreta carreta = carretasRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        ModelAndView mv = new ModelAndView("carretas/formNewCarreta");
+        mv.addObject("paginaAtiva", "carretas");
+        mv.addObject("carretaForm", carreta);
+        return mv;
     }
 
     @PostMapping("/excluir-carreta/{id}")
@@ -62,6 +77,30 @@ public class CarretasController {
             redirect.addFlashAttribute("erro", "Erro ao excluir: " + e.getMessage());
         }
         return "redirect:/carretas";
+    }
+
+    @PostMapping("/editar-carreta/{id}")
+    public Object editarCarreta(@PathVariable Long id, @ModelAttribute Carreta carreta, RedirectAttributes redirect) {
+        ModelAndView mv = new ModelAndView("carretas/formNewCarreta");
+        Carreta carretaEncontrada = carretasRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        carretaEncontrada.setPlaca(carreta.getPlaca());
+        carretaEncontrada.setMetragem(carreta.getMetragem());
+        carretaEncontrada.setPesoMax(carreta.getPesoMax());
+        carretaEncontrada.setTipo(carreta.getTipo());
+        System.out.println("id: " + id);
+        try {
+            carretasRepository.save(carretaEncontrada);
+            redirect.addFlashAttribute("sucesso", "Carreta alterada com sucesso");
+            return "redirect:/carretas";
+
+        } catch (Exception e) {
+            System.out.println("Erro ao alterar carreta id " + carretaEncontrada.getId() + e.getMessage());
+            mv.addObject("erro",
+                    "Erro ao efetuar alterações na carreta. Por favor, analise os logs" + e.getMessage());
+            mv.addObject("carretaForm", carreta);
+            return mv;
+        }
     }
 
 }
