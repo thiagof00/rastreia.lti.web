@@ -14,7 +14,7 @@
             <div class="topbar-right">
                 <div class="search-wrap"><i class="ti ti-search"></i><input class="search-input"
                         placeholder="Buscar por nome ou CPF..."></div>
-                <button class="btn btn-primary" onclick="openModal('modal-motorista-new')"><i
+                <button class="btn btn-primary" th:onclick="|window.location.href='@{/nova-carreta}'|"><i
                         class="ti ti-user-plus"></i>
                     Cadastrar</button>
             </div>
@@ -69,93 +69,32 @@
                                 <th class="sortable">ID</th>
                                 <th class="sortable">Motorista</th>
                                 <th>CPF</th>
+                                <th>CHN</th>
                                 <th>Status</th>
                                 <th>Carga atual</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="td-mono">#M01</td>
-                                <td><span class="mini-avatar">CS</span>Carlos Silva</td>
-                                <td class="td-mono">123.456.789-00</td>
-                                <td><span class="badge badge-amber">Em viagem</span></td>
+
+
+
+                            <tr th:each="motorista : ${motoristas}">
+                                <td th:text="${motorista.id}" class="td-mono">#M01</td>
+                                <td><span class="mini-avatar">CS</span><span th:text="${motorista.nome}"></span> <span
+                                        th:text="${motorista.sobrenome}"></span></td>
+                                <td th:text="${motorista.cpf}" class="td-mono">123.456.789-00</td>
+                                <td th:text="${motorista.cnh}" class="td-mono"></td>
                                 <td><span style="color:var(--purple-500);font-weight:500">#001</span> — PO-2025-001</td>
                                 <td>
                                     <div class="row-actions">
                                         <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-motorista-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-cpf','Carlos Silva')"><i
-                                                class="ti ti-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td-mono">#M02</td>
-                                <td><span class="mini-avatar">MS</span>Maria Santos</td>
-                                <td class="td-mono">987.654.321-00</td>
-                                <td><span class="badge badge-green">Ocioso</span></td>
-                                <td class="td-muted">—</td>
-                                <td>
-                                    <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-motorista-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-cpf','Maria Santos')"><i
-                                                class="ti ti-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td-mono">#M03</td>
-                                <td><span class="mini-avatar">JP</span>João Pereira</td>
-                                <td class="td-mono">111.222.333-00</td>
-                                <td><span class="badge badge-amber">Em viagem</span></td>
-                                <td><span style="color:var(--purple-500);font-weight:500">#003</span> — PO-2025-003</td>
-                                <td>
-                                    <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-motorista-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-cpf','João Pereira')"><i
-                                                class="ti ti-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td-mono">#M04</td>
-                                <td><span class="mini-avatar">AO</span>Ana Oliveira</td>
-                                <td class="td-mono">444.555.666-00</td>
-                                <td><span class="badge badge-gray">Indisponível</span></td>
-                                <td class="td-muted">—</td>
-                                <td>
-                                    <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-motorista-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-cpf','Ana Oliveira')"><i
-                                                class="ti ti-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="td-mono">#M05</td>
-                                <td><span class="mini-avatar">RL</span>Roberto Lima</td>
-                                <td class="td-mono">555.666.777-00</td>
-                                <td><span class="badge badge-amber">Em viagem</span></td>
-                                <td><span style="color:var(--purple-500);font-weight:500">#005</span> — PO-2025-005</td>
-                                <td>
-                                    <div class="row-actions">
-                                        <button class="row-btn edit" title="Editar"
-                                            onclick="openModal('modal-motorista-edit')"><i
-                                                class="ti ti-edit"></i></button>
-                                        <button class="row-btn del" title="Excluir"
-                                            onclick="openModal('modal-delete-cpf','Roberto Lima')"><i
+                                            th:onclick="|location.href='@{/editar-motorista/{id}(id=${motorista.getId()})}'|">
+                                            <i class="ti ti-edit"></i></button>
+                                        <button type="button" class="row-btn del" title="Excluir"
+                                            th:data-nome="|${motorista.nome} ${motorista.sobrenome}|"
+                                            th:data-action="@{/excluir-motorista/{id}(id=${motorista.id})}"
+                                            onclick="openModal('modal-delete', this)"><i
                                                 class="ti ti-trash"></i></button>
                                     </div>
                                 </td>
