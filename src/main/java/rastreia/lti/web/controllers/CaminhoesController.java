@@ -21,19 +21,13 @@ public class CaminhoesController {
     @Autowired
     CaminhaoRepository caminhaoRepository;
 
-    @GetMapping("/caminhoes-all")
-    public @ResponseBody Iterable<Caminhao> all() {
-
-        return caminhaoRepository.findAll();
-
-    }
-
     @GetMapping("/caminhoes")
     public ModelAndView index() {
         ModelAndView mv = new ModelAndView("caminhoes/index");
+        Long totalCaminhoes = caminhaoRepository.count();
         mv.addObject("paginaAtiva", "caminhoes");
         mv.addObject("caminhoes", caminhaoRepository.findAll());
-
+        mv.addObject("totalCaminhoes", totalCaminhoes);
         return mv;
     }
 
