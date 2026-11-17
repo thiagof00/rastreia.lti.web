@@ -1,9 +1,12 @@
 package rastreia.lti.web.service;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.Locale;
 
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import rastreia.lti.web.models.Usuario;
 import rastreia.lti.web.repository.UsuarioRepository;
 
@@ -16,6 +19,30 @@ public class UsuarioService {
     public UsuarioService(UsuarioRepository usuarioRepository, AutenticacaoService autenticacaoService) {
         this.usuarioRepository = usuarioRepository;
         this.autenticacaoService = autenticacaoService;
+    }
+
+    @Transactional
+    public Usuario cadastrar(Usuario dados) {
+        validarCamposObrigatorios(dados);
+
+        Usuario novoUsuario = new Usuario();
+        novoUsuario.setNome(dados.getNome().trim());
+        novoUsuario.setSobrenome(dados.getSobrenome().trim());
+        novoUsuario.setEmail(dados.getEmail().trim().toLowerCase(Locale.ROOT));
+        novoUsuario.setCpf(dados.getCpf());
+        novoUsuario.setSenha(dados.getSenha());
+        novoUsuario.setTipo_usuario(dados.getTipo_usuario());
+
+        validarFormatoDados(novoUsuario);
+
+        String cpfNumeros = novoUsuario.getCpf().replace(".", "").replace("-", "");
+        novoUsuario.setCpf(cpfNumeros);
+        validarDuplicidade(novoUsuario.getEmail(), cpfNumeros);
+
+        novoUsuario.setSenha(autenticacaoService.encodarSenha(novoUsuario.getSenha()));
+        novoUsuario.setCriadoEm(LocalDateTime.now());
+
+        return usuarioRepository.save(novoUsuario);
     }
 
     public void validarCamposObrigatorios(Usuario usuario) {
@@ -116,7 +143,12 @@ public class UsuarioService {
             throw new IllegalArgumentException("Este e-mail já está cadastrado.");
         }
 
-        if (usuarioRepository.existsByCpf(cpf)) {
+        validarCpf(cpf);
+        String numeros = cpf.replace(".", "").replace("-", "");
+        String formatado = numeros.substring(0, 3) + "." + numeros.substring(3, 6) + "."
+                + numeros.substring(6, 9) + "-" + numeros.substring(9);
+
+        if (usuarioRepository.existsByCpf(numeros) || usuarioRepository.existsByCpf(formatado)) {
             throw new IllegalArgumentException("Este CPF já está cadastrado.");
         }
     }
