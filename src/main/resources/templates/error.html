@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${status != null ? status : 500} — Rastreia LTI|">Erro — Rastreia LTI</title>
+    <link rel="stylesheet" th:href="@{/global.css}">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" rel="stylesheet">
+    <style>
+        .err-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .err-card {
+            width: 100%;
+            max-width: 520px;
+            padding: 24px 24px 32px;
+            text-align: center;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow);
+            animation: err-in .5s ease both;
+        }
+
+        .err-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .08em;
+            color: var(--text-2);
+        }
+
+        .err-brand i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            color: #fff;
+            background: var(--purple-500);
+            border-radius: 7px;
+        }
+
+        .err-scene {
+            display: block;
+            width: 100%;
+            height: auto;
+            margin-bottom: 22px;
+            border-radius: var(--radius-lg);
+        }
+
+        .err-code {
+            font-family: var(--mono);
+            font-size: 54px;
+            font-weight: 500;
+            line-height: 1;
+            color: var(--purple-500);
+        }
+
+        .err-title {
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-1);
+        }
+
+        .err-msg {
+            max-width: 380px;
+            margin: 8px auto 0;
+            color: var(--text-2);
+        }
+
+        .err-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .err-actions .btn.btn-primary {
+            width: auto;
+            color: #fff;
+            background: var(--purple-500);
+            border-color: var(--purple-700);
+        }
+
+        .err-actions .btn.btn-primary:hover {
+            background: var(--purple-700);
+        }
+
+        .err-path {
+            margin-top: 20px;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--text-3);
+            word-break: break-all;
+        }
+
+        .truck {
+            transform-origin: 180px 190px;
+            animation: err-bounce 1.1s ease-in-out infinite;
+        }
+
+        .wheel {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: err-spin .9s linear infinite;
+        }
+
+        .eye {
+            transform-box: fill-box;
+            transform-origin: center;
+            animation: err-blink 4.2s infinite;
+        }
+
+        .pupils-idle {
+            animation: err-look 5s ease-in-out infinite;
+        }
+
+        .puff {
+            transform-box: fill-box;
+            transform-origin: center;
+            opacity: 0;
+            animation: err-puff 2.4s ease-out infinite;
+        }
+
+        .puff:nth-child(2) {
+            animation-delay: .8s;
+        }
+
+        .puff:nth-child(3) {
+            animation-delay: 1.6s;
+        }
+
+        .question {
+            animation: err-float 1.8s ease-in-out infinite;
+        }
+
+        .light {
+            animation: err-glow 1.4s ease-in-out infinite;
+        }
+
+        .cloud {
+            animation: err-cloud 18s linear infinite;
+        }
+
+        .cloud.slow {
+            animation-duration: 26s;
+            animation-delay: -10s;
+        }
+
+        .road-dash {
+            animation: err-road .7s linear infinite;
+        }
+
+        @keyframes err-in {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
+        }
+
+        @keyframes err-bounce {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(0);
+            }
+
+            50% {
+                transform: translateY(-2.5px) rotate(-.5deg);
+            }
+        }
+
+        @keyframes err-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes err-blink {
+
+            0%,
+            92%,
+            100% {
+                transform: scaleY(1);
+            }
+
+            95% {
+                transform: scaleY(.08);
+            }
+        }
+
+        @keyframes err-look {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            30% {
+                transform: translateX(-3px);
+            }
+
+            65% {
+                transform: translateX(3px);
+            }
+        }
+
+        @keyframes err-puff {
+            0% {
+                opacity: 0;
+                transform: translate(0, 0) scale(.4);
+            }
+
+            20% {
+                opacity: .85;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-16px, -44px) scale(1.5);
+            }
+        }
+
+        @keyframes err-float {
+
+            0%,
+            100% {
+                transform: translateY(0) rotate(-6deg);
+            }
+
+            50% {
+                transform: translateY(-6px) rotate(6deg);
+            }
+        }
+
+        @keyframes err-glow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: .35;
+            }
+        }
+
+        @keyframes err-cloud {
+            from {
+                transform: translateX(-90px);
+            }
+
+            to {
+                transform: translateX(450px);
+            }
+        }
+
+        @keyframes err-road {
+            to {
+                transform: translateX(-26px);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            .err-card,
+            .truck,
+            .wheel,
+            .eye,
+            .pupils-idle,
+            .puff,
+            .question,
+            .light,
+            .cloud,
+            .road-dash {
+                animation: none;
+            }
+
+            .puff {
+                opacity: .5;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="err-page"
+        th:with="codigo=${status != null ? status : 500},
+                 titulo=${status == 404 ? 'Rota não encontrada' : (status == 403 ? 'Acesso negado' : (status == 400 ? 'Requisição inválida' : (status == 503 ? 'Serviço indisponível' : 'Falha na estrada')))},
+                 mensagem=${status == 404 ? 'Essa carga se perdeu no caminho. A página que você procura não existe ou foi movida.' : (status == 403 ? 'Você não tem permissão para acessar este destino.' : (status == 400 ? 'Não foi possível entender o pedido enviado. Confira os dados e tente novamente.' : (status == 503 ? 'O serviço está temporariamente fora do ar. Tente novamente em instantes.' : 'Algo deu errado do nosso lado. Tente novamente em instantes.')))}">
+        <div class="err-card">
+
+            <div class="err-brand"><i class="ti ti-route"></i> RASTREIA.LTI</div>
+
+            <svg class="err-scene" id="cena" viewBox="0 0 360 215" role="img"
+                aria-label="Caminhão animado com expressão preocupada">
+                <rect width="360" height="215" fill="var(--purple-50)" />
+
+                <g class="cloud" fill="#fff">
+                    <ellipse cx="0" cy="34" rx="26" ry="9" />
+                    <ellipse cx="14" cy="28" rx="16" ry="9" />
+                </g>
+                <g class="cloud slow" fill="#fff" opacity=".8">
+                    <ellipse cx="0" cy="62" rx="20" ry="7" />
+                    <ellipse cx="-10" cy="57" rx="12" ry="7" />
+                </g>
+
+                <rect y="188" width="360" height="27" fill="var(--gray-800)" />
+                <g clip-path="url(#estrada)">
+                    <g class="road-dash">
+                        <line x1="0" y1="202" x2="420" y2="202" stroke="var(--gray-300)" stroke-width="3"
+                            stroke-dasharray="14 12" />
+                    </g>
+                </g>
+                <clipPath id="estrada">
+                    <rect y="188" width="360" height="27" />
+                </clipPath>
+
+                <g class="truck">
+                    <rect x="14" y="56" width="186" height="104" rx="10" fill="var(--purple-50)"
+                        stroke="var(--purple-200)" stroke-width="2" />
+                    <rect x="16" y="138" width="182" height="10" fill="var(--purple-100)" />
+                    <text x="107" y="108" text-anchor="middle" font-size="32" font-weight="500" letter-spacing="4"
+                        fill="var(--purple-500)" style="font-family: var(--mono)">LTI</text>
+                    <line x1="52" y1="124" x2="162" y2="124" stroke="var(--purple-200)" stroke-width="2"
+                        stroke-dasharray="3 6" stroke-linecap="round" />
+
+                    <rect x="198" y="140" width="14" height="8" fill="var(--gray-600)" />
+                    <rect x="214" y="60" width="6" height="28" rx="2" fill="var(--gray-600)" />
+
+                    <rect x="208" y="84" width="104" height="76" rx="14" fill="var(--purple-500)" />
+                    <rect x="204" y="152" width="112" height="10" rx="5" fill="var(--purple-700)" />
+                    <rect x="216" y="92" width="22" height="30" rx="6" fill="var(--blue-50)" opacity=".75" />
+                    <rect x="244" y="92" width="58" height="44" rx="10" fill="var(--blue-50)" stroke="var(--purple-700)"
+                        stroke-width="2" />
+
+                    <g class="eye">
+                        <circle cx="260" cy="116" r="10" fill="#fff" stroke="var(--gray-300)" stroke-width="1.5" />
+                    </g>
+                    <g class="eye">
+                        <circle cx="286" cy="116" r="10" fill="#fff" stroke="var(--gray-300)" stroke-width="1.5" />
+                    </g>
+                    <g class="pupils-idle" id="pupilas-idle">
+                        <g id="pupilas">
+                            <circle cx="260" cy="116" r="4.6" fill="var(--gray-800)" />
+                            <circle cx="286" cy="116" r="4.6" fill="var(--gray-800)" />
+                            <circle cx="261.6" cy="114.4" r="1.2" fill="#fff" />
+                            <circle cx="287.6" cy="114.4" r="1.2" fill="#fff" />
+                        </g>
+                    </g>
+
+                    <line x1="252" y1="104" x2="268" y2="99" stroke="var(--gray-800)" stroke-width="2.5"
+                        stroke-linecap="round" />
+                    <line x1="278" y1="99" x2="294" y2="104" stroke="var(--gray-800)" stroke-width="2.5"
+                        stroke-linecap="round" />
+
+                    <path d="M263 150 q10 -8 20 0" fill="none" stroke="#fff" stroke-width="2.5"
+                        stroke-linecap="round" />
+                    <circle class="light" cx="304" cy="147" r="5" fill="var(--amber-400)" />
+
+                    <g>
+                        <circle class="puff" cx="217" cy="54" r="7" fill="var(--gray-300)" />
+                        <circle class="puff" cx="217" cy="54" r="7" fill="var(--gray-300)" />
+                        <circle class="puff" cx="217" cy="54" r="7" fill="var(--gray-300)" />
+                    </g>
+
+                    <g transform="translate(268 52)">
+                        <g class="question">
+                            <circle r="14" fill="var(--amber-400)" />
+                            <text y="6" text-anchor="middle" font-size="18" font-weight="700" fill="#fff"
+                                style="font-family: var(--font)">?</text>
+                        </g>
+                    </g>
+                </g>
+
+                <g transform="translate(52 170)">
+                    <g class="wheel">
+                        <circle r="18" fill="var(--gray-800)" />
+                        <circle r="8" fill="var(--gray-200)" />
+                        <line x1="-8" y1="0" x2="8" y2="0" stroke="var(--gray-400)" stroke-width="2" />
+                        <line x1="0" y1="-8" x2="0" y2="8" stroke="var(--gray-400)" stroke-width="2" />
+                    </g>
+                </g>
+                <g transform="translate(100 170)">
+                    <g class="wheel">
+                        <circle r="18" fill="var(--gray-800)" />
+                        <circle r="8" fill="var(--gray-200)" />
+                        <line x1="-8" y1="0" x2="8" y2="0" stroke="var(--gray-400)" stroke-width="2" />
+                        <line x1="0" y1="-8" x2="0" y2="8" stroke="var(--gray-400)" stroke-width="2" />
+                    </g>
+                </g>
+                <g transform="translate(256 170)">
+                    <g class="wheel">
+                        <circle r="18" fill="var(--gray-800)" />
+                        <circle r="8" fill="var(--gray-200)" />
+                        <line x1="-8" y1="0" x2="8" y2="0" stroke="var(--gray-400)" stroke-width="2" />
+                        <line x1="0" y1="-8" x2="0" y2="8" stroke="var(--gray-400)" stroke-width="2" />
+                    </g>
+                </g>
+            </svg>
+
+            <div class="err-code" th:text="${codigo}">404</div>
+            <h1 class="err-title" th:text="${titulo}">Rota não encontrada</h1>
+            <p class="err-msg" th:text="${mensagem}">Essa carga se perdeu no caminho.</p>
+
+            <div class="err-actions">
+                <a class="btn btn-primary" th:href="@{/dashboard}"><i class="ti ti-home"></i> Ir para o início</a>
+                <button type="button" class="btn btn-ghost" onclick="history.back()"><i class="ti ti-arrow-left"></i>
+                    Voltar</button>
+            </div>
+
+            <div class="err-path" th:if="${path != null}" th:text="${path}">/caminho/inexistente</div>
+        </div>
+    </main>
+
+    <script>
+        var cena = document.getElementById('cena');
+        var pupilas = document.getElementById('pupilas');
+        var idle = document.getElementById('pupilas-idle');
+
+        document.addEventListener('mousemove', function (e) {
+            var r = cena.getBoundingClientRect();
+            var dx = e.clientX - (r.left + r.width * 0.758);
+            var dy = e.clientY - (r.top + r.height * 0.54);
+            var dist = Math.hypot(dx, dy) || 1;
+            var f = Math.min(1, dist / 200) * 3.2;
+            pupilas.setAttribute('transform', 'translate(' + (dx / dist * f) + ' ' + (dy / dist * f) + ')');
+            idle.style.animation = 'none';
+        });
+    </script>
+</body>
+
+</html>

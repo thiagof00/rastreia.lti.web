@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import rastreia.lti.web.models.Carreta;
 import rastreia.lti.web.models.Motorista;
 import rastreia.lti.web.repository.MotoristaRepository;
 
@@ -25,8 +23,11 @@ public class MotoristasController {
     @GetMapping("/motoristas")
     public ModelAndView index() {
         ModelAndView mv = new ModelAndView("motoristas/index");
+        Long totalMotoristas = motoristaRepository.count();
+
         mv.addObject("paginaAtiva", "motoristas");
         mv.addObject("motoristas", motoristaRepository.findAll());
+        mv.addObject("totalMotoristas", totalMotoristas);
         return mv;
     }
 
