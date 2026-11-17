@@ -39,10 +39,11 @@ public class CarretasController {
     }
 
     @PostMapping("/nova-carreta")
-    public Object saveCarreta(@ModelAttribute("carretaForm") Carreta carreta) {
+    public Object saveCarreta(@ModelAttribute("carretaForm") Carreta carreta, RedirectAttributes redirect) {
 
         try {
             carretasRepository.save(carreta);
+            redirect.addFlashAttribute("sucesso", "Carreta cadastrada com sucesso!");
             return "redirect:/carretas";
         } catch (Exception e) {
             ModelAndView mv = new ModelAndView("carretas/formNewCarreta");
