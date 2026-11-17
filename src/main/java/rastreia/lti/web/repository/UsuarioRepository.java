@@ -8,4 +8,8 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
     Usuario findByEmail(String email);
 
+    boolean existsByEmailIgnoreCase(String email);
+
+    boolean existsByCpf(String cpf);
+
 }
