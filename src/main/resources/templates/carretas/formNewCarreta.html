@@ -101,8 +101,10 @@
             <div class="form-footer">
                 <span></span>
                 <div class="form-footer-right">
-                    <button class="btn btn-cancel"><i class="ti ti-x"></i> Cancelar</button>
-                    <button class="btn btn-submit"><i class="ti ti-check"></i> <span
+                    <button type="button" class="btn btn-cancel" th:onclick="|location.href='@{/carretas}'|"><i
+                            class="ti ti-x"></i>
+                        Cancelar</button>
+                    <button type="submit" class="btn btn-submit"><i class="ti ti-check"></i> <span
                             th:text="${carretaForm.id == null} ? 'Cadastrar carreta' : 'Alterar carreta'"></span></button>
                 </div>
             </div>
