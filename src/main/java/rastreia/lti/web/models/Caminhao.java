@@ -3,7 +3,11 @@ package rastreia.lti.web.models;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLDelete;
+
 @Entity
+
+@SQLDelete(sql = "UPDATE caminhoes SET ativo = false WHERE id = ?")
 @Table(name = "caminhoes")
 public class Caminhao {
 
