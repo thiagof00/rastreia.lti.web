@@ -2,10 +2,12 @@ package rastreia.lti.web.controllers;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,7 +20,24 @@ import rastreia.lti.web.models.Usuario;
 
 class UsuariosControllerTests {
 
-    private final UsuariosController controller = new UsuariosController();
+    private final UsuariosController controller = new UsuariosController(null);
+
+    @Test
+    void postExigeAdministradorETokenDoFormulario() throws Exception {
+        Usuario admin = new Usuario();
+        admin.setTipo_usuario(TipoUsuario.ADMIN);
+        Usuario cliente = new Usuario();
+        cliente.setTipo_usuario(TipoUsuario.CLIENTE);
+        MockHttpSession sessao = new MockHttpSession();
+        String token = (String) controller.novoUsuario(admin, sessao).getModel().get("tokenCadastro");
+        var mvc = MockMvcBuilders.standaloneSetup(controller).build();
+
+        mvc.perform(post("/novo-usuario").session(sessao).requestAttr("usuarioLogado", admin))
+                .andExpect(status().isForbidden());
+        mvc.perform(post("/novo-usuario").session(sessao).requestAttr("usuarioLogado", cliente)
+                .param("tokenCadastro", token))
+                .andExpect(status().isForbidden());
+    }
 
     @Test
     void renderizaFormularioComLayoutECamposVinculados() throws Exception {
@@ -54,7 +73,7 @@ class UsuariosControllerTests {
         Usuario admin = new Usuario();
         admin.setTipo_usuario(TipoUsuario.ADMIN);
 
-        ModelAndView mv = controller.novoUsuario(admin);
+        ModelAndView mv = controller.novoUsuario(admin, new MockHttpSession());
 
         assertEquals("usuarios/formNewUsuario", mv.getViewName());
         assertEquals("usuarios", mv.getModel().get("paginaAtiva"));
@@ -70,7 +89,7 @@ class UsuariosControllerTests {
             Usuario usuario = new Usuario();
             usuario.setTipo_usuario(tipo);
             ResponseStatusException erro = assertThrows(ResponseStatusException.class,
-                    () -> controller.novoUsuario(usuario));
+                    () -> controller.novoUsuario(usuario, new MockHttpSession()));
             assertEquals(HttpStatus.FORBIDDEN, erro.getStatusCode());
         }
     }
@@ -80,7 +99,7 @@ class UsuariosControllerTests {
         Usuario admin = new Usuario();
         admin.setTipo_usuario(TipoUsuario.ADMIN);
         admin.setAtivo(false);
-        assertThrows(ResponseStatusException.class, () -> controller.novoUsuario(admin));
-        assertThrows(ResponseStatusException.class, () -> controller.novoUsuario(null));
+        assertThrows(ResponseStatusException.class, () -> controller.novoUsuario(admin, new MockHttpSession()));
+        assertThrows(ResponseStatusException.class, () -> controller.novoUsuario(null, new MockHttpSession()));
     }
 }
