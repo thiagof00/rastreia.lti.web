@@ -957,6 +957,12 @@ tbody tr:hover .row-actions {
   color: var(--text-1);
 }
 
+.input-wrap .password-toggle {
+  background: transparent;
+  border: 0;
+  padding: 4px;
+}
+
 input[type="text"],
 input[type="password"],
 input[type="number"],

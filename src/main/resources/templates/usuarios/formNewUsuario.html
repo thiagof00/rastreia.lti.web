@@ -49,9 +49,13 @@
                         </div>
                         <div class="field">
                             <label class="field-label" for="senha">Senha <span class="req">*</span></label>
-                            <div class="input-wrap">
+                            <div class="input-wrap has-right">
                                 <input type="password" id="senha" name="senha" minlength="8" maxlength="72"
                                     autocomplete="new-password" aria-describedby="senha-ajuda" required>
+                                <button type="button" class="icon-right password-toggle" data-password-toggle
+                                    aria-controls="senha" aria-label="Mostrar senha">
+                                    <i class="ti ti-eye" aria-hidden="true"></i>
+                                </button>
                             </div>
                             <div class="field-hint" id="senha-ajuda">Mínimo de 8 caracteres, com pelo menos uma letra e um número.</div>
                         </div>
@@ -74,6 +78,7 @@
                 </div>
             </form>
         </main>
+        <script th:src="@{/password-toggle.js}" defer></script>
     </th:block>
 </body>
 
