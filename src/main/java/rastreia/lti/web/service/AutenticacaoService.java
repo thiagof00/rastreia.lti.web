@@ -39,7 +39,7 @@ public class AutenticacaoService {
     public String login(String email, String senha) {
         Usuario usuario = usuarioRepository.findByEmail(email);
 
-        if (usuario == null || !usuario.getAtivo()) {
+        if (usuario == null || !Boolean.TRUE.equals(usuario.getAtivo())) {
             return null;
         }
 
@@ -93,7 +93,8 @@ public class AutenticacaoService {
             return null;
         }
 
-        return sessao.getUsuario();
+        Usuario usuario = sessao.getUsuario();
+        return Boolean.TRUE.equals(usuario.getAtivo()) ? usuario : null;
     }
 
     @Transactional

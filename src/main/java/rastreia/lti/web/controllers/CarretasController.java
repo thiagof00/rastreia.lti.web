@@ -26,7 +26,7 @@ public class CarretasController {
         ModelAndView mv = new ModelAndView("carretas/index");
         Long totalCarretas = carretasRepository.count();
         mv.addObject("paginaAtiva", "carretas");
-        mv.addObject("carretas", carretasRepository.findAll());
+        mv.addObject("carretas", carretasRepository.findAllByAtivo(true));
         mv.addObject("totalCarretas", totalCarretas);
         return mv;
     }

@@ -26,7 +26,7 @@ public class MotoristasController {
         Long totalMotoristas = motoristaRepository.count();
 
         mv.addObject("paginaAtiva", "motoristas");
-        mv.addObject("motoristas", motoristaRepository.findAll());
+        mv.addObject("motoristas", motoristaRepository.findAllByAtivo(true));
         mv.addObject("totalMotoristas", totalMotoristas);
         return mv;
     }
