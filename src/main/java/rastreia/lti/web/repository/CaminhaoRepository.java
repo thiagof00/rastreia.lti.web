@@ -6,4 +6,7 @@ import rastreia.lti.web.models.Caminhao;
 
 public interface CaminhaoRepository extends CrudRepository<Caminhao, Long> {
 
+    Iterable<Caminhao> findAllByAtivo(boolean ativo);
+
+    Long countByAtivo(boolean ativo);
 }

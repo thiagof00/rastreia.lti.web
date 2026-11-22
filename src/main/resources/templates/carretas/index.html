@@ -25,7 +25,7 @@
                 <div class="stat-card">
                     <div class="stat-icon si-purple"><i class="ti ti-truck"></i></div>
                     <div class="stat-body">
-                        <div class="stat-value" style="color:var(--purple-500)">18</div>
+                        <div class="stat-value" style="color:var(--purple-500)" th:text="${totalCarretas}"></div>
                         <div class="stat-label">Total cadastradas</div>
                     </div>
                 </div>
@@ -93,12 +93,12 @@
                             <tr th:each="carreta : ${carretas}">
                                 <td th:text="${carreta.id}" class="td-mono">#R01</td>
                                 <td th:text="${carreta.getPlaca()}" class="td-mono"
-                                    style="font-weight:600;letter-spacing:1px">XYZ-001</td>
+                                    >XYZ-001</td>
                                 <td th:text="${carreta.getTipo()}">Baú</td>
                                 <td th:text="${carreta.getPesoMax()}" class="td-mono">30.000</td>
                                 <td th:text="${carreta.getMetragem()}" class="td-mono">14</td>
                                 <td><span class="badge badge-amber">Em viagem</span></td>
-                                <td>Carga <span style="color:var(--purple-500);font-weight:500">#001</span></td>
+                                <td>Carga <span >#001</span></td>
                                 <td>
                                     <div class="row-actions">
                                         <button class="row-btn edit" title="Editar" type="button"

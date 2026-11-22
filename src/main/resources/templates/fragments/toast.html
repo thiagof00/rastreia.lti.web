@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<body>
+    <div th:fragment="toast">
+        <style>
+            #toast-container {
+                position: fixed;
+                top: 2rem;
+                right: 1.5rem;
+                z-index: 9999;
+                display: flex;
+                flex-direction: column;
+                gap: .5rem;
+                width: min(360px, calc(100vw - 2rem));
+
+            }
+
+            .toast {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 1rem;
+                padding: .75rem 1rem;
+                background: #fff;
+                color: #333;
+                border-left: 5px solid;
+                border-radius: 6px;
+                box-shadow: 0 4px 14px rgba(0, 0, 0, .2);
+                animation: toast-entrada .25s ease-out;
+                transition: opacity .3s, transform .3s;
+                height: 4rem;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .toast::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                height: 4px;
+                width: 100%;
+                animation: toast-progresso 5s linear forwards;
+            }
+
+            .toast-sucesso::after {
+                background: #2e7d32;
+            }
+
+            .toast-erro::after {
+                background: #c62828;
+            }
+
+            .toast-sucesso {
+                border-color: #2e7d32;
+            }
+
+            .toast-erro {
+                border-color: #c62828;
+            }
+
+            .toast.saindo {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            .toast button {
+                background: none;
+                border: 0;
+                font-size: 1.25rem;
+                line-height: 1;
+                cursor: pointer;
+                color: inherit;
+            }
+
+            @keyframes toast-entrada {
+                from {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            @keyframes toast-progresso {
+                from {
+                    width: 100%;
+                }
+
+                to {
+                    width: 0;
+                }
+            }
+        </style>
+
+        <div id="toast-container">
+            <div class="toast toast-sucesso" role="status" th:if="${sucesso}">
+                <span th:text="${sucesso}"></span>
+                <button type="button" aria-label="Fechar">&times;</button>
+            </div>
+            <div class="toast toast-erro" role="alert" th:if="${erro}">
+                <span th:text="${erro}"></span>
+                <button type="button" aria-label="Fechar">&times;</button>
+            </div>
+        </div>
+
+        <script>
+            (function () {
+                const container = document.getElementById('toast-container');
+
+                function fechar(toast) {
+                    toast.classList.add('saindo');
+                    setTimeout(function () { toast.remove(); }, 300);
+                }
+
+                function preparar(toast) {
+                    toast.querySelector('button').addEventListener('click', function () { fechar(toast); });
+                    toast.addEventListener('animationend', function (e) {
+                        if (e.animationName === 'toast-progresso') fechar(toast);
+                    });
+                }
+
+                container.querySelectorAll('.toast').forEach(preparar);
+
+                window.mostrarToast = function (tipo, mensagem) {
+                    const toast = document.createElement('div');
+                    toast.className = 'toast toast-' + tipo;
+                    toast.setAttribute('role', tipo === 'erro' ? 'alert' : 'status');
+
+                    const texto = document.createElement('span');
+                    texto.textContent = mensagem;
+
+                    const botao = document.createElement('button');
+                    botao.type = 'button';
+                    botao.setAttribute('aria-label', 'Fechar');
+                    botao.innerHTML = '&times;';
+
+                    toast.append(texto, botao);
+                    container.appendChild(toast);
+                    preparar(toast);
+                };
+            })();
+        </script>
+    </div>
+</body>
+
+</html>

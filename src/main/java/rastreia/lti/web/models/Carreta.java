@@ -2,6 +2,8 @@ package rastreia.lti.web.models;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLDelete;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,6 +14,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
 @Entity
+@SQLDelete(sql = "UPDATE carretas SET ativo = false WHERE id = ?")
 @Table(name = "carretas")
 public class Carreta {
 

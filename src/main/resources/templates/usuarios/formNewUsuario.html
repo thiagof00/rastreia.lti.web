@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout(~{::content})}">
+
+<body>
+    <th:block th:fragment="content">
+        <main class="content">
+            <form th:action="@{/novo-usuario}" method="post" th:object="${usuarioForm}" class="form-card">
+                <input type="hidden" name="tokenCadastro" th:value="${tokenCadastro}">
+                <div class="form-card-header">
+                    <div>
+                        <div class="form-card-title"><i class="ti ti-user-plus"></i> Cadastro de usuário</div>
+                        <div class="form-card-subtitle">Preencha os dados da nova conta.</div>
+                    </div>
+                    <a class="btn btn-ghost btn-sm" th:href="@{/dashboard}">Voltar</a>
+                </div>
+
+                <div class="form-card-body">
+                    <div class="alert alert-error show" role="alert" th:if="${erro}" th:text="${erro}"></div>
+                    <div class="alert alert-success show" role="status" th:if="${sucesso}" th:text="${sucesso}"></div>
+                    <div class="form-divider"><span>Dados do usuário</span></div>
+                    <div class="fields-grid">
+                        <div class="field">
+                            <label class="field-label" for="nome">Nome <span class="req">*</span></label>
+                            <div class="input-wrap">
+                                <input type="text" th:field="*{nome}" maxlength="50" autocomplete="given-name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="sobrenome">Sobrenome <span class="req">*</span></label>
+                            <div class="input-wrap">
+                                <input type="text" th:field="*{sobrenome}" maxlength="50" autocomplete="family-name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="cpf">CPF <span class="req">*</span></label>
+                            <div class="input-wrap">
+                                <input type="text" th:field="*{cpf}" maxlength="14"
+                                    pattern="[0-9]{11}|[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}"
+                                    placeholder="000.000.000-00" aria-describedby="cpf-ajuda" required>
+                            </div>
+                            <div class="field-hint" id="cpf-ajuda">Informe 11 números, com ou sem pontuação.</div>
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="email">E-mail <span class="req">*</span></label>
+                            <div class="input-wrap">
+                                <input type="email" th:field="*{email}" maxlength="100" autocomplete="off"
+                                    placeholder="nome@empresa.com" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="senha">Senha <span class="req">*</span></label>
+                            <div class="input-wrap has-right">
+                                <input type="password" id="senha" name="senha" minlength="8" maxlength="72"
+                                    autocomplete="new-password" aria-describedby="senha-ajuda" required>
+                                <button type="button" class="icon-right password-toggle" data-password-toggle
+                                    aria-controls="senha" aria-label="Mostrar senha">
+                                    <i class="ti ti-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="field-hint" id="senha-ajuda">Mínimo de 8 caracteres, com pelo menos uma letra e um número.</div>
+                        </div>
+                        <div class="field">
+                            <label class="field-label" for="tipo_usuario">Tipo de usuário <span class="req">*</span></label>
+                            <select th:field="*{tipo_usuario}" required>
+                                <option value="">Selecione o tipo</option>
+                                <option th:each="tipo : ${tiposUsuario}" th:value="${tipo}" th:text="${tipo}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <span></span>
+                    <div class="form-footer-right">
+                        <a class="btn btn-cancel" th:href="@{/dashboard}">Cancelar</a>
+                        <button type="submit" class="btn btn-submit">Cadastrar usuário</button>
+                    </div>
+                </div>
+            </form>
+        </main>
+        <script th:src="@{/password-toggle.js}" defer></script>
+    </th:block>
+</body>
+
+</html>
