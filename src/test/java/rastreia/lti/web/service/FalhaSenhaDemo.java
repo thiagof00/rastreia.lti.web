@@ -6,11 +6,11 @@ import org.junit.jupiter.api.Test;
 
 class FalhaSenhaDemo {
 
+    // Falha de propósito ao esperar que uma senha inválida seja aceita.
     @Test
     void esperaAceitarSenhaInvalidaDeProposito() {
         AutenticacaoService service = new AutenticacaoService(null, null);
 
-        // Expectativa propositalmente errada para demonstrar uma falha no JUnit.
         assertDoesNotThrow(() -> service.encodarSenha("123"));
     }
 }
