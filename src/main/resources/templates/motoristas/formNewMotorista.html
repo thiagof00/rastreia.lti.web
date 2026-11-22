@@ -11,7 +11,7 @@
 
     <th:block th:fragment="content">
         <form
-            th:action="${motoristaForm.id == null} ? @{/nova-motorista} : @{/editar-motorista/{id}(id=${motoristaForm.id})}"
+            th:action="${motoristaForm.id == null} ? @{/novo-motorista} : @{/editar-motorista/{id}(id=${motoristaForm.id})}"
             method="post" th:object="${motoristaForm}" class="form-card">
             <div class="form-card-header">
                 <div>

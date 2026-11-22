@@ -1,6 +1,7 @@
 package rastreia.lti.web.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,6 +19,15 @@ import rastreia.lti.web.models.Usuario;
 import rastreia.lti.web.repository.SessaoRepository;
 
 class AutenticacaoServiceTests {
+
+    // Confirma que o BCrypt rejeita uma senha diferente da que gerou o hash.
+    @Test
+    void rejeitaSenhaDiferenteAoConferirHash() {
+        AutenticacaoService service = new AutenticacaoService(null, null);
+        String hash = service.encodarSenha("Teste123");
+
+        assertFalse(new BCryptPasswordEncoder().matches("Teste124", hash));
+    }
 
     // Confirma que a inativação da conta bloqueia o acesso com uma sessão ainda vigente.
     @Test

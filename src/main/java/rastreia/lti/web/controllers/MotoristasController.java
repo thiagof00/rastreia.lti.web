@@ -42,11 +42,11 @@ public class MotoristasController {
     public Object saveMotorista(@ModelAttribute("motoristaForm") Motorista motorista) {
         try {
             motoristaRepository.save(motorista);
-            return "redirect:motoristas";
+            return "redirect:/motoristas";
         } catch (Exception e) {
             ModelAndView mv = new ModelAndView("motoristas/formNewMotorista");
             mv.addObject("paginaAtiva", "motoristas");
-            mv.addObject("motoristasForm", motorista);
+            mv.addObject("motoristaForm", motorista);
             mv.addObject("erro", "Erro ao cadastrar: " + e.getMessage());
             return mv;
         }
@@ -65,7 +65,7 @@ public class MotoristasController {
     @PostMapping("/editar-motorista/{id}")
     public Object editarMotorista(@PathVariable Long id, @ModelAttribute Motorista motorista,
             RedirectAttributes redirect) {
-        ModelAndView mv = new ModelAndView("carretas/formNewCarreta");
+        ModelAndView mv = new ModelAndView("motoristas/formNewMotorista");
         Motorista motoristaEncontrado = motoristaRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         motoristaEncontrado.setNome(motorista.getNome());
@@ -75,14 +75,14 @@ public class MotoristasController {
         System.out.println("id: " + id);
         try {
             motoristaRepository.save(motoristaEncontrado);
-            redirect.addFlashAttribute("sucesso", "Carreta alterada com sucesso");
-            return "redirect:/carretas";
+            redirect.addFlashAttribute("sucesso", "Motorista alterado com sucesso");
+            return "redirect:/motoristas";
 
         } catch (Exception e) {
-            System.out.println("Erro ao alterar carreta id " + motoristaEncontrado.getId() + e.getMessage());
+            System.out.println("Erro ao alterar motorista id " + motoristaEncontrado.getId() + e.getMessage());
             mv.addObject("erro",
-                    "Erro ao efetuar alterações na carreta. Por favor, analise os logs" + e.getMessage());
-            mv.addObject("carretaForm", motorista);
+                    "Erro ao alterar motorista.");
+            mv.addObject("motoristaForm", motoristaEncontrado);
             return mv;
         }
     }
