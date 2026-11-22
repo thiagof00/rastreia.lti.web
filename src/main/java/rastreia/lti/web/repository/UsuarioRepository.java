@@ -12,4 +12,8 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
     boolean existsByCpf(String cpf);
 
+    Iterable<Usuario> findAllByAtivo(boolean ativo);
+
+    Long countByAtivo(boolean ativo);
+
 }

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpSession;
 import rastreia.lti.web.models.TipoUsuario;
 import rastreia.lti.web.models.Usuario;
+import rastreia.lti.web.repository.UsuarioRepository;
 import rastreia.lti.web.service.UsuarioService;
 
 @Controller
@@ -25,9 +26,23 @@ public class UsuariosController {
 
     private static final String TOKEN_CADASTRO = "tokenCadastroUsuario";
     private final UsuarioService usuarioService;
+    private final UsuarioRepository usuarioRepository;
 
-    public UsuariosController(UsuarioService usuarioService) {
+    public UsuariosController(UsuarioService usuarioService, UsuarioRepository usuarioRepository) {
         this.usuarioService = usuarioService;
+        this.usuarioRepository = usuarioRepository;
+    }
+
+    @GetMapping("/usuarios")
+    public ModelAndView index(@RequestAttribute(name = "usuarioLogado", required = false) Usuario usuarioLogado) {
+        validarAdministrador(usuarioLogado);
+        ModelAndView mv = new ModelAndView("usuarios/index");
+        mv.addObject("paginaAtiva", "usuarios");
+        mv.addObject("tiposUsuario", TipoUsuario.values());
+        mv.addObject("usuarios", usuarioRepository.findAllByAtivo(true));
+        mv.addObject("totalUsuarios", usuarioRepository.countByAtivo(true));
+        return mv;
+
     }
 
     @GetMapping("/novo-usuario")
