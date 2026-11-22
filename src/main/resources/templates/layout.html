@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rastreia LTI</title>
+    <script th:src="@{/tema.js}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
@@ -71,6 +72,10 @@
             </nav>
 
             <div class="sb-bottom">
+                <button type="button" class="nav-item theme-toggle" id="theme-toggle" aria-pressed="false" hidden>
+                    <i class="ti ti-moon" aria-hidden="true"></i>
+                    <span>Modo escuro</span>
+                </button>
                 <div class="nav-item danger">
                     <a th:href="@{/logout}"><i class="ti ti-logout"></i> Sair</a>
                 </div>

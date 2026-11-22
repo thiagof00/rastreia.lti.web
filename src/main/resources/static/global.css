@@ -68,6 +68,94 @@
   --tr: 0.16s ease;
 }
 
+:root[data-tema="escuro"] {
+  color-scheme: dark;
+  --bg: #191822;
+  --surface: #232230;
+  --border: rgba(231, 229, 249, 0.14);
+  --border-md: rgba(231, 229, 249, 0.28);
+  --text-1: #F3F1F9;
+  --text-2: #C6C3D3;
+  --text-3: #A8A4BA;
+  --gray-50: #292837;
+  --gray-100: #302F40;
+  --gray-200: #3A384C;
+  --gray-300: #514E66;
+  --gray-400: #A8A4BA;
+  --gray-600: #C6C3D3;
+  --gray-800: #F3F1F9;
+  --purple-50: #352D53;
+  --purple-100: #483B6A;
+  --purple-200: #7764AE;
+  --purple-500: #C4B5FD;
+  --purple-700: #D4C7FF;
+  --teal-50: #173B34;
+  --teal-600: #79DFBF;
+  --amber-50: #45351E;
+  --amber-400: #F7BF65;
+  --amber-600: #FFD38C;
+  --green-50: #283A24;
+  --green-400: #A9D77C;
+  --green-600: #BFE69C;
+  --red-50: #48282F;
+  --red-500: #FB8E98;
+  --red-600: #FFADB5;
+  --blue-50: #233951;
+  --blue-400: #8CC4FF;
+  --blue-600: #A9D5FF;
+}
+
+[data-tema="escuro"] :is(.btn-primary, .btn-submit, .page-btn.active, .demo-btn.active, .selector-item.selected .selector-check) {
+  color: #21183B;
+}
+
+[data-tema="escuro"] .btn-danger:hover {
+  background: #60303A;
+}
+
+[data-tema="escuro"] .metric-card.amber .metric-value {
+  color: var(--amber-600);
+}
+
+[data-tema="escuro"] .metric-card.green .metric-value {
+  color: var(--green-600);
+}
+
+[data-tema="escuro"] .radio-option.status-ocioso input:checked + .radio-label {
+  color: var(--green-600);
+}
+
+[data-tema="escuro"] .radio-option.status-manut input:checked + .radio-label {
+  color: var(--blue-600);
+}
+
+[data-tema="escuro"] #toast-container .toast {
+  background: var(--surface);
+  color: var(--text-1);
+}
+
+.theme-toggle {
+  width: calc(100% - 8px);
+  background: transparent;
+  border: 0;
+  border-left: 2px solid transparent;
+  font-family: inherit;
+  text-align: left;
+}
+
+.theme-toggle[hidden] {
+  display: none;
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--purple-500);
+  outline-offset: -2px;
+}
+
+.theme-toggle[aria-pressed="true"] {
+  color: var(--purple-500);
+}
+
 html {
   height: 100%;
 }
