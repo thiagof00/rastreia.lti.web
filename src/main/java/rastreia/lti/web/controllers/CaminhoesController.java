@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,18 +20,15 @@ public class CaminhoesController {
     @Autowired
     CaminhaoRepository caminhaoRepository;
 
-    @GetMapping("/caminhoes-all")
-    public @ResponseBody Iterable<Caminhao> all() {
-
-        return caminhaoRepository.findAll();
-
-    }
-
     @GetMapping("/caminhoes")
     public ModelAndView index() {
         ModelAndView mv = new ModelAndView("caminhoes/index");
+        Long totalCaminhoes = caminhaoRepository.count();
+        Iterable<Caminhao> caminhoesAtivos = caminhaoRepository.findAllByAtivo(true);
+
         mv.addObject("paginaAtiva", "caminhoes");
-        mv.addObject("caminhoes", caminhaoRepository.findAll());
+        mv.addObject("caminhoes", caminhoesAtivos);
+        mv.addObject("totalCaminhoes", totalCaminhoes);
 
         return mv;
     }

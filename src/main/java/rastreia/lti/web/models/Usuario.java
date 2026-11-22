@@ -2,6 +2,8 @@ package rastreia.lti.web.models;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.SQLDelete;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
+@SQLDelete(sql = "UPDATE usuarios SET ativo = false WHERE id = ?")
 @Table(name = "usuarios")
 public class Usuario {
 

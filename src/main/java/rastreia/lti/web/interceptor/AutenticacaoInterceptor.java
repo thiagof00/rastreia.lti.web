@@ -20,17 +20,34 @@ public class AutenticacaoInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        String token = lerCookie(request);
+        boolean api = request.getRequestURI().startsWith(request.getContextPath() + "/api/");
+
+        String token = api ? lerBearer(request) : lerCookie(request);
+
         Usuario usuario = autenticacaoService.validar(token);
 
         if (usuario == null) {
-            response.setHeader("Location", request.getContextPath() + "/");
-            response.setStatus(HttpServletResponse.SC_FOUND);
+            if (api) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            } else {
+
+                response.setHeader("Location", request.getContextPath() + "/");
+                response.setStatus(HttpServletResponse.SC_FOUND);
+            }
+
             return false;
         }
 
         request.setAttribute("usuarioLogado", usuario);
         return true;
+    }
+
+    private String lerBearer(HttpServletRequest request) {
+        String header = request.getHeader("Authorization");
+        if (header != null && header.startsWith("Bearer ")) {
+            return header.substring(7).trim();
+        }
+        return null;
     }
 
     private String lerCookie(HttpServletRequest request) {

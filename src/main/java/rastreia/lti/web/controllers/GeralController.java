@@ -98,7 +98,7 @@ public class GeralController {
         return "redirect:/";
     }
 
-    private String obterIp(HttpServletRequest request) {
+    static String obterIp(HttpServletRequest request) {
         String cfIp = request.getHeader("CF-Connecting-IP");
         if (cfIp != null && !cfIp.isBlank()) {
             return cfIp;

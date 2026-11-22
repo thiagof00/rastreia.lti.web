@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rastreia LTI</title>
+    <script th:src="@{/tema.js}"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap"
@@ -16,7 +17,7 @@
 </head>
 
 <body>
-
+    <div th:replace="~{fragments/toast :: toast}"></div>
     <div class="app">
 
         <!-- ══ SIDEBAR — definida uma vez, herdada por todos ══ -->
@@ -62,9 +63,19 @@
                 <div class="nav-item" data-tooltip="Carretas" th:classappend="${paginaAtiva == 'carretas'} ? 'active'">
                     <a th:href="@{/carretas}"><i class="ti ti-truck"></i> Carretas</a>
                 </div>
+                <div class="nav-item" data-tooltip="Usuários" th:classappend="${paginaAtiva == 'usuarios'} ? 'active'">
+                    <a th:href="@{/usuarios}"><i class="ti ti-users-group"></i> Usuários</a>
+                </div>
+                <div class="nav-item" data-tooltip="Clientes" th:classappend="${paginaAtiva == 'clientes'} ? 'active'">
+                    <a th:href="@{/clientes}"><i class="ti ti-building-arch"></i> Clientes </a>
+                </div>
             </nav>
 
             <div class="sb-bottom">
+                <button type="button" class="nav-item theme-toggle" id="theme-toggle" aria-pressed="false" hidden>
+                    <i class="ti ti-moon" aria-hidden="true"></i>
+                    <span>Modo escuro</span>
+                </button>
                 <div class="nav-item danger">
                     <a th:href="@{/logout}"><i class="ti ti-logout"></i> Sair</a>
                 </div>
@@ -90,13 +101,12 @@
                 <div class="modal-body">
                     <div class="delete-icon"><i class="ti ti-alert-triangle"></i></div>
                     <div class="delete-msg">
-                        <p>Tem certeza que deseja excluir <strong data-modal-nome></strong>?</p>
-                        <p>Esta ação não pode ser desfeita.</p>
+                        <p>Tem certeza que deseja inativar <strong data-modal-nome></strong>?</p>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-cancel" onclick="closeModal('modal-delete')">Cancelar</button>
-                    <button type="submit" class="btn btn-danger"><i class="ti ti-trash"></i> Excluir</button>
+                    <button type="submit" class="btn btn-danger"><i class="ti ti-trash"></i> Inativar</button>
                 </div>
             </form>
         </div>

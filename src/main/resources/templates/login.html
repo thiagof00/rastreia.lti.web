@@ -57,7 +57,10 @@
                     <div class="input-wrap has-right">
                         <i class="ti ti-lock icon-left"></i>
                         <input type="password" id="login-pass" name="password" placeholder="••••••••">
-                        <i class="ti ti-eye icon-right" id="toggle-pass"></i>
+                        <button type="button" class="icon-right password-toggle" data-password-toggle
+                            aria-controls="login-pass" aria-label="Mostrar senha">
+                            <i class="ti ti-eye" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -69,6 +72,7 @@
         </div>
         <img th:src="@{login.jpg}" alt="" style="width: 100%;">
     </div>
+    <script th:src="@{/password-toggle.js}" defer></script>
 </body>
 
 

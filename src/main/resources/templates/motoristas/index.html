@@ -24,7 +24,7 @@
                 <div class="stat-card">
                     <div class="stat-icon si-purple"><i class="ti ti-users"></i></div>
                     <div class="stat-body">
-                        <div class="stat-value" style="color:var(--purple-500)">10</div>
+                        <div class="stat-value" style="color:var(--purple-500)" th:text="${totalMotoristas}"></div>
                         <div class="stat-label">Total cadastrados</div>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                                         th:text="${motorista.sobrenome}"></span></td>
                                 <td th:text="${motorista.cpf}" class="td-mono">123.456.789-00</td>
                                 <td th:text="${motorista.cnh}" class="td-mono"></td>
-                                <td><span style="color:var(--purple-500);font-weight:500">#001</span> — PO-2025-001</td>
+                                <td><span >#001</span> — PO-2025-001</td>
                                 <td>
                                     <div class="row-actions">
                                         <button class="row-btn edit" title="Editar"
