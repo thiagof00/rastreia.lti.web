@@ -36,7 +36,7 @@ public class ClientesController {
         ModelAndView mv = new ModelAndView("clientes/formNewCliente");
 
         mv.addObject("clienteForm", new Cliente());
-        mv.addObject("usuarios", usuarioRepository.findAllByAtivo(true));
+        mv.addObject("usuarios", usuarioRepository.findAllByClienteIdIsNullAndAtivo(true));
         return mv;
     }
 

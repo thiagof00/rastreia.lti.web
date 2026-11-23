@@ -1,6 +1,8 @@
 package rastreia.lti.web.models;
 
 import jakarta.persistence.*;
+import rastreia.lti.web.models.enums.Status_motorista;
+
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLDelete;
@@ -28,6 +30,10 @@ public class Motorista {
 
     @Column(name = "ativo")
     private Boolean ativo = true;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status_motorista status;
 
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
@@ -72,6 +78,14 @@ public class Motorista {
 
     public String getCpf() {
         return cpf;
+    }
+
+    public Status_motorista getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status_motorista status) {
+        this.status = status;
     }
 
     public void setCpf(String cpf) {

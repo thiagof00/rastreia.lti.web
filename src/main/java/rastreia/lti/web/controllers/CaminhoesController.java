@@ -74,6 +74,7 @@ public class CaminhoesController {
         caminhao.setPlaca(dados.getPlaca());
         caminhao.setMarca(dados.getMarca());
         caminhao.setModelo(dados.getModelo());
+        caminhao.setStatus(dados.getStatus());
 
         try {
             caminhaoRepository.save(caminhao);

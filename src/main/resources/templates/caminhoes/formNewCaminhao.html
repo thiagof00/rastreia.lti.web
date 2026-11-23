@@ -52,24 +52,12 @@
                     <div class=" form-divider"><span>Status</span>
                     </div>
                     <div class="field">
-                        <label class="field-label">Status inicial <span class="req">*</span></label>
-                        <div class="radio-group">
-                            <div class="radio-option status-ocioso">
-                                <input type="radio" name="status-caminhao" id="sc-ocioso" checked>
-                                <label class="radio-label" for="sc-ocioso"><i class="ti ti-circle-check"></i>
-                                    Ocioso</label>
-                            </div>
-                            <div class="radio-option status-manut">
-                                <input type="radio" name="status-caminhao" id="sc-manut">
-                                <label class="radio-label" for="sc-manut"><i class="ti ti-tool"></i> Em
-                                    manutenção</label>
-                            </div>
-                            <div class="radio-option status-viagem">
-                                <input type="radio" name="status-caminhao" id="sc-viagem">
-                                <label class="radio-label" for="sc-viagem"><i class="ti ti-route"></i> Em
-                                    viagem</label>
-                            </div>
-                        </div>
+                        <label class="field-label" for="status-caminhao">Status inicial <span
+                                class="req">*</span></label>
+                        <select class="field-select" id="status-caminhao" th:field="*{status}" required>
+                            <option value="OCIOSO">Ocioso</option>
+                            <option value="EM_MANUTENCAO">Em manutenção</option>
+                        </select>
                     </div>
                 </div>
 

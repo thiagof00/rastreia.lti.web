@@ -16,4 +16,8 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
     Long countByAtivo(boolean ativo);
 
+    Iterable<Usuario> findAllByClienteIdIsNull();
+
+    Iterable<Usuario> findAllByClienteIdIsNullAndAtivo(boolean ativo);
+
 }

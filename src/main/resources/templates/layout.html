@@ -69,6 +69,10 @@
                 <div class="nav-item" data-tooltip="Clientes" th:classappend="${paginaAtiva == 'clientes'} ? 'active'">
                     <a th:href="@{/clientes}"><i class="ti ti-building-arch"></i> Clientes </a>
                 </div>
+                <div class="nav-item" data-tooltip="Clientes"
+                    th:classappend="${paginaAtiva == 'relatorios'} ? 'active'">
+                    <a th:href="@{/relatorios}"><i class="ti ti-file-description"></i> Relatórios </a>
+                </div>
             </nav>
 
             <div class="sb-bottom">

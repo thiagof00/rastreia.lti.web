@@ -6,12 +6,15 @@ import org.hibernate.annotations.SQLDelete;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import rastreia.lti.web.models.enums.Status_veiculo;
 
 @Entity
 @SQLDelete(sql = "UPDATE carretas SET ativo = false WHERE id = ?")
@@ -36,6 +39,10 @@ public class Carreta {
 
     @Column(name = "ativo")
     private Boolean ativo = true;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Status_veiculo status;
 
     @Column(name = "criado_em", nullable = false, updatable = false)
     private LocalDateTime criadoEm;
@@ -84,6 +91,14 @@ public class Carreta {
 
     public String getTipo() {
         return tipo;
+    }
+
+    public Status_veiculo getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status_veiculo status) {
+        this.status = status;
     }
 
     public void setAtivo(Boolean ativo) {
