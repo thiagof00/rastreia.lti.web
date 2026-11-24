@@ -105,7 +105,17 @@
   --blue-600: #A9D5FF;
 }
 
-[data-tema="escuro"] :is(.btn-primary, .btn-submit, .page-btn.active, .demo-btn.active, .selector-item.selected .selector-check) {
+[data-tema="escuro"] :is(.btn-primary, .btn-submit) {
+  background: var(--purple-500);
+  border-color: var(--purple-500);
+  color: #21183B;
+}
+
+[data-tema="escuro"] :is(.btn-primary, .btn-submit):hover {
+  background: var(--purple-700);
+}
+
+[data-tema="escuro"] :is(.page-btn.active, .demo-btn.active, .selector-item.selected .selector-check) {
   color: #21183B;
 }
 

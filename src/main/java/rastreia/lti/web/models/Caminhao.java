@@ -16,7 +16,7 @@ import jakarta.persistence.Table;
 @Entity
 
 
-// Mateus Falta isso aqui para os outros
+
 @SQLDelete(sql = "UPDATE caminhoes SET ativo = false WHERE id = ?")
 @Table(name = "caminhoes")
 public class Caminhao {
