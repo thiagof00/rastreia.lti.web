@@ -20,7 +20,11 @@ import rastreia.lti.web.models.Usuario;
 
 class UsuariosControllerTests {
 
-    private final UsuariosController controller = new UsuariosController(null);
+    private final UsuariosController controller;
+
+    public UsuariosControllerTests(UsuariosController usuariosController) {
+        controller = usuariosController;
+    }
 
     @Test
     void postExigeAdministradorETokenDoFormulario() throws Exception {
@@ -85,7 +89,7 @@ class UsuariosControllerTests {
 
     @Test
     void outrosPerfisNaoRecebemFormulario() {
-        for (TipoUsuario tipo : new TipoUsuario[] {TipoUsuario.CLIENTE, TipoUsuario.DEV, null}) {
+        for (TipoUsuario tipo : new TipoUsuario[] { TipoUsuario.CLIENTE, TipoUsuario.DEV, null }) {
             Usuario usuario = new Usuario();
             usuario.setTipo_usuario(tipo);
             ResponseStatusException erro = assertThrows(ResponseStatusException.class,

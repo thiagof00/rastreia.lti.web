@@ -64,10 +64,14 @@
                     <a th:href="@{/carretas}"><i class="ti ti-truck"></i> Carretas</a>
                 </div>
                 <div class="nav-item" data-tooltip="Usuários" th:classappend="${paginaAtiva == 'usuarios'} ? 'active'">
-                    <a th:href="@{/novo-usuario}"><i class="ti ti-users-group"></i> Usuários</a>
+                    <a th:href="@{/usuarios}"><i class="ti ti-users-group"></i> Usuários</a>
                 </div>
-                <div class="nav-item" data-tooltip="Carretas" th:classappend="${paginaAtiva == 'carretas'} ? 'active'">
-                    <a><i class="ti ti-building-arch"></i> Clientes </a>
+                <div class="nav-item" data-tooltip="Clientes" th:classappend="${paginaAtiva == 'clientes'} ? 'active'">
+                    <a th:href="@{/clientes}"><i class="ti ti-building-arch"></i> Clientes </a>
+                </div>
+                <div class="nav-item" data-tooltip="Clientes"
+                    th:classappend="${paginaAtiva == 'relatorios'} ? 'active'">
+                    <a th:href="@{/relatorios}"><i class="ti ti-file-description"></i> Relatórios </a>
                 </div>
             </nav>
 

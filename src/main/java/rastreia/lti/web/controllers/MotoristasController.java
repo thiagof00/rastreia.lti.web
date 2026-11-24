@@ -72,6 +72,7 @@ public class MotoristasController {
         motoristaEncontrado.setSobrenome(motorista.getSobrenome());
         motoristaEncontrado.setCpf(motorista.getCpf());
         motoristaEncontrado.setCnh(motorista.getCnh());
+        motoristaEncontrado.setStatus(motorista.getStatus());
         System.out.println("id: " + id);
         try {
             motoristaRepository.save(motoristaEncontrado);

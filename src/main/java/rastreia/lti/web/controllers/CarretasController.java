@@ -88,6 +88,7 @@ public class CarretasController {
         carretaEncontrada.setMetragem(carreta.getMetragem());
         carretaEncontrada.setPesoMax(carreta.getPesoMax());
         carretaEncontrada.setTipo(carreta.getTipo());
+        carretaEncontrada.setStatus(carreta.getStatus());
         System.out.println("id: " + id);
         try {
             carretasRepository.save(carretaEncontrada);

@@ -32,6 +32,14 @@ public class GeralController {
         return mv;
     }
 
+    @GetMapping("/relatorios")
+    public ModelAndView indexRelatorios() {
+        ModelAndView mv = new ModelAndView("relatorios");
+        mv.addObject("paginaAtiva", "relatorios");
+
+        return mv;
+    }
+
     @GetMapping("/")
     public ModelAndView login() {
         return new ModelAndView("login");

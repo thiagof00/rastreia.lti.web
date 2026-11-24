@@ -92,13 +92,13 @@
                         <tbody>
                             <tr th:each="carreta : ${carretas}">
                                 <td th:text="${carreta.id}" class="td-mono">#R01</td>
-                                <td th:text="${carreta.getPlaca()}" class="td-mono"
-                                    >XYZ-001</td>
+                                <td th:text="${carreta.getPlaca()}" class="td-mono">XYZ-001</td>
                                 <td th:text="${carreta.getTipo()}">Baú</td>
                                 <td th:text="${carreta.getPesoMax()}" class="td-mono">30.000</td>
                                 <td th:text="${carreta.getMetragem()}" class="td-mono">14</td>
-                                <td><span class="badge badge-amber">Em viagem</span></td>
-                                <td>Carga <span >#001</span></td>
+                                <td><span class="badge badge-amber" th:text="${carreta.getStatus()}">Em viagem</span>
+                                </td>
+                                <td>Carga <span>#001</span></td>
                                 <td>
                                     <div class="row-actions">
                                         <button class="row-btn edit" title="Editar" type="button"

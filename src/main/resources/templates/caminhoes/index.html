@@ -71,7 +71,7 @@
                     <table>
                         <thead>
                             <tr>
-                                
+
                                 <th class="sortable">Placa</th>
                                 <th>Tipo</th>
                                 <th>Status</th>
@@ -81,12 +81,12 @@
                         </thead>
                         <tbody>
                             <tr th:each="caminhao : ${caminhoes}">
-                               
-                                <td th:text="${caminhao.getPlaca()}" class="td-mono"
-                                    >ABC-1234</td>
+
+                                <td th:text="${caminhao.getPlaca()}" class="td-mono">ABC-1234</td>
                                 <td th:text="${caminhao.getModelo()}">Cavalo Mecânico 6x4</td>
-                                <td><span class="badge badge-amber">Em viagem</span></td>
-                                <td>Carga <span >#001</span></td>
+                                <td><span class="badge badge-amber" th:text="${caminhao.getStatus()}">Em viagem</span>
+                                </td>
+                                <td>Carga <span>#001</span></td>
                                 <td>
                                     <div class="row-actions">
                                         <button type="button" class="row-btn edit" title="Editar"
