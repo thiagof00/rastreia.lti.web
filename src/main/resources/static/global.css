@@ -217,6 +217,7 @@ body {
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow: hidden;
 }
 
 /* o elemento filho direto do <body> precisa ocupar tudo */
@@ -355,11 +356,12 @@ tbody tr:hover .row-actions {
 .content {
   flex: 1;
   overflow-y: auto;
-  /* scroll vertical aqui */
   overflow-x: hidden;
   padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
   min-height: 0;
-  /* essencial — sem isso o flex ignora o overflow */
 }
 
 /* ═══════════════════════════════════════════
@@ -1002,6 +1004,7 @@ tbody tr:hover .row-actions {
   position: relative;
   z-index: 1;
   animation: loginIn 0.5s cubic-bezier(.22, .68, 0, 1.2) both;
+   overflow-y: hidden;
 }
 
 .login-logo {
@@ -1684,6 +1687,8 @@ textarea::placeholder {
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
+  animation: fadeUp 0.35s ease both;
+  animation-delay: 0.25s;
 }
 
 .card-header {
@@ -1711,10 +1716,7 @@ textarea::placeholder {
   animation-delay: 0.20s;
 }
 
-.card {
-  animation: fadeUp 0.35s ease both;
-  animation-delay: 0.25s;
-}
+
 
 /* ══ Stats row ══ */
 .stats-row {
@@ -1765,15 +1767,7 @@ textarea::placeholder {
   margin-bottom: 2px;
 }
 
-/* ══ Card ══ */
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  animation: fadeUp .3s ease both;
-}
+
 
 .card-title {
   font-size: 14px;
@@ -2624,16 +2618,7 @@ thead th .sort-icon {
   margin-top: 1px;
 }
 
-/* ── Scrollable content area ── */
-.content {
-  flex: 1;
-  overflow-y: auto;
-  /* scroll vertical aqui */
-  overflow-x: hidden;
-  padding: 22px 26px;
-  min-height: 0;
-  /* essencial — sem isso o flex ignora o overflow */
-}
+
 
 /* ── Section header ── */
 .section-head {
@@ -2792,15 +2777,6 @@ thead th .sort-icon {
 }
 
 /* ══ Content area ══ */
-.content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 22px 26px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  min-height: 0;
-}
 
 .content::-webkit-scrollbar {
   width: 5px;
@@ -2834,4 +2810,50 @@ thead th .sort-icon {
 .si-teal {
   background: var(--teal-50);
   color: var(--teal-600);
+}
+
+/* Personalização da ScrollBar */
+/* Chrome, Edge e Safari */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e8e3dd;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9c1b8;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #aaa096;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c1b8 #e8e3dd;
+}
+
+.btn.btn-primary {
+    background: var(--purple-500);
+    color: #fff;
+    border-color: var(--purple-700);
+}
+
+.btn.btn-primary:hover {
+    background: var(--purple-700);
+}
+
+/* MODO ESCURO */
+html[data-tema="escuro"] .btn.btn-primary {
+    background: var(--purple-500);
+    color: #21183B;
+    border-color: var(--purple-700);
+}
+
+html[data-tema="escuro"] .btn.btn-primary:hover {
+    background: var(--purple-700);
 }
