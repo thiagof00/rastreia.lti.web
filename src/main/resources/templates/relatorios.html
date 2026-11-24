@@ -27,7 +27,7 @@
             </div>
         </header>
 
-        <main class="content">
+        <main class="content rel-content">
 
             <!-- Resumo -->
             <div class="stats-row cols-4">
@@ -63,7 +63,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="card-title"><i class="ti ti-list"></i> Relatórios disponíveis</div>
-                    <div class="card-actions">
+                    <div class="card-actions rel-filters">
                         <select class="filter-select" id="rel-period" onchange="relUpdateFilterCount()">
                             <option>Últimos 7 dias</option>
                             <option selected>Últimos 30 dias</option>
@@ -516,6 +516,63 @@
 
         <!-- CSS mínimo só para o grid de relatórios (não existia no global.css) -->
         <style>
+            .rel-content {
+                padding-top: 14px;
+                gap: 12px;
+            }
+
+            .rel-content > * {
+                flex-shrink: 0;
+            }
+
+            .rel-content .card-header {
+                flex-wrap: wrap;
+                gap: 8px 16px;
+                padding-block: 10px;
+            }
+
+            .rel-content .rel-filters {
+                min-width: 0;
+            }
+
+            .rel-filters .filter-select {
+                width: auto;
+                max-width: 100%;
+            }
+
+            [data-tema="escuro"] .rel-card {
+                background: var(--gray-50);
+            }
+
+            [data-tema="escuro"] :is(.rel-tab:not(.active), .rel-section-title span, .rel-card p, .rel-empty) {
+                color: var(--text-2);
+            }
+
+            [data-tema="escuro"] .rel-tables code {
+                background: var(--surface);
+                color: var(--text-2);
+            }
+
+            [data-tema="escuro"] :is(.rel-icon, .rel-badge.op) {
+                background: var(--blue-50);
+                color: var(--blue-600);
+            }
+
+            [data-tema="escuro"] :is(.rel-icon.green, .rel-badge.ger) {
+                background: var(--green-50);
+                color: var(--green-600);
+            }
+
+            [data-tema="escuro"] .rel-icon.amber {
+                background: var(--amber-50);
+                color: var(--amber-600);
+            }
+
+            [data-tema="escuro"] .rel-icon.purple {
+                background: var(--purple-50);
+                color: var(--purple-500);
+            }
+
             .rel-tabs {
                 display: flex;
                 gap: 4px;
@@ -564,7 +621,7 @@
 
             .rel-grid {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
                 gap: 16px;
                 padding: 12px 18px 18px;
             }

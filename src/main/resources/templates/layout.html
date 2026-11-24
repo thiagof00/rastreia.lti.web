@@ -76,9 +76,12 @@
             </nav>
 
             <div class="sb-bottom">
-                <button type="button" class="nav-item theme-toggle" id="theme-toggle" aria-pressed="false" hidden>
-                    <i class="ti ti-moon" aria-hidden="true"></i>
-                    <span>Modo escuro</span>
+                <button type="button" class="nav-item theme-toggle" id="theme-toggle" role="switch"
+                    aria-label="Modo escuro" aria-checked="false" hidden>
+                    <span class="theme-track" aria-hidden="true">
+                        <span class="theme-thumb"><i class="ti ti-sun"></i><i class="ti ti-moon"></i></span>
+                    </span>
+                    <span>Tema</span>
                 </button>
                 <div class="nav-item danger">
                     <a th:href="@{/logout}"><i class="ti ti-logout"></i> Sair</a>

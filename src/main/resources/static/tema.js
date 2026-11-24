@@ -13,7 +13,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         const botao = document.getElementById('theme-toggle');
         const atualizarBotao = () => {
-            botao.setAttribute('aria-pressed', String(pagina.dataset.tema === 'escuro'));
+            botao.setAttribute('aria-checked', String(pagina.dataset.tema === 'escuro'));
         };
 
         atualizarBotao();
