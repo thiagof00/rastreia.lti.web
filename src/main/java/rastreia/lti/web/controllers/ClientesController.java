@@ -1,9 +1,13 @@
 package rastreia.lti.web.controllers;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,10 +27,22 @@ public class ClientesController {
     }
 
     @GetMapping("/clientes")
-    public ModelAndView index() {
+    public ModelAndView index(@RequestParam(defaultValue = "1") int pagina) {
+        int numeroPagina = Math.max(1, pagina);
+        Page<Cliente> clientes = clienteRepository.findAll(
+                PageRequest.of(numeroPagina - 1, 10, Sort.by("id")));
+        int ultimaPagina = Math.max(1, clientes.getTotalPages());
+        if (numeroPagina > ultimaPagina) {
+            return new ModelAndView("redirect:/clientes?pagina=" + ultimaPagina);
+        }
+
         ModelAndView mv = new ModelAndView("clientes/index");
-        mv.addObject("totalClientes", clienteRepository.count());
-        mv.addObject("clientes", clienteRepository.findAll());
+        mv.addObject("totalClientes", clientes.getTotalElements());
+        mv.addObject("clientes", clientes.getContent());
+        mv.addObject("paginaClientes", clientes);
+        mv.addObject("numeroPagina", numeroPagina);
+        mv.addObject("primeiroRegistro", clientes.getPageable().getOffset() + 1);
+        mv.addObject("ultimoRegistro", clientes.getPageable().getOffset() + clientes.getNumberOfElements());
         mv.addObject("paginaAtiva", "clientes");
         return mv;
     }

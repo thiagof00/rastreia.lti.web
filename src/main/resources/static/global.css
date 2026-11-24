@@ -1810,6 +1810,23 @@ table {
   width: 100%;
 }
 
+.clientes-card {
+  flex-shrink: 0;
+}
+
+.clientes-card :is(.table-wrap, table, tbody) {
+  max-height: none;
+}
+
+.clientes-card .pagination-btns {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.clientes-card a.page-btn {
+  text-decoration: none;
+}
+
 
 table {
   width: 100%;
