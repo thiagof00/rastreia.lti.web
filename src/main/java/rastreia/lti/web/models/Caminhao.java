@@ -18,7 +18,8 @@ import rastreia.lti.web.models.enums.Status_veiculo;
 
 @Entity
 
-// Mateus Falta isso aqui para os outros
+
+
 @SQLDelete(sql = "UPDATE caminhoes SET ativo = false WHERE id = ?")
 @Table(name = "caminhoes")
 public class Caminhao {

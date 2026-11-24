@@ -105,7 +105,17 @@
   --blue-600: #A9D5FF;
 }
 
-[data-tema="escuro"] :is(.btn-primary, .btn-submit, .page-btn.active, .demo-btn.active, .selector-item.selected .selector-check) {
+[data-tema="escuro"] :is(.btn-primary, .btn-submit) {
+  background: var(--purple-500);
+  border-color: var(--purple-500);
+  color: #21183B;
+}
+
+[data-tema="escuro"] :is(.btn-primary, .btn-submit):hover {
+  background: var(--purple-700);
+}
+
+[data-tema="escuro"] :is(.page-btn.active, .demo-btn.active, .selector-item.selected .selector-check) {
   color: #21183B;
 }
 
@@ -152,8 +162,46 @@
   outline-offset: -2px;
 }
 
-.theme-toggle[aria-pressed="true"] {
-  color: var(--purple-500);
+.theme-toggle .theme-track {
+  display: flex;
+  flex: 0 0 52px;
+  padding: 3px;
+  border-radius: 999px;
+  background: var(--gray-200);
+}
+
+.theme-toggle .theme-thumb {
+  display: grid;
+  place-items: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-1);
+  transition: transform var(--tr);
+}
+
+.theme-thumb i {
+  font-size: 14px;
+}
+
+.theme-thumb .ti-moon,
+.theme-toggle[aria-checked="true"] .ti-sun {
+  display: none;
+}
+
+.theme-toggle[aria-checked="true"] .theme-thumb {
+  transform: translateX(25px);
+}
+
+.theme-toggle[aria-checked="true"] .ti-moon {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle .theme-thumb {
+    transition: none;
+  }
 }
 
 html {
