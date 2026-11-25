@@ -4,14 +4,18 @@
 <body>
     <th:block th:fragment="content">
         <main class="content">
-            <form th:action="@{/novo-usuario}" method="post" th:object="${usuarioForm}" class="form-card">
+            <form th:action="${idEdicao == null} ? @{/novo-usuario} : @{/editar-usuario/{id}(id=${idEdicao})}"
+                method="post" th:object="${usuarioForm}" class="form-card">
                 <input type="hidden" name="tokenCadastro" th:value="${tokenCadastro}">
                 <div class="form-card-header">
                     <div>
-                        <div class="form-card-title"><i class="ti ti-user-plus"></i> Cadastro de usuário</div>
-                        <div class="form-card-subtitle">Preencha os dados da nova conta.</div>
+                        <div class="form-card-title"><i class="ti" th:classappend="${idEdicao == null} ? 'ti-user-plus' : 'ti-edit'"></i>
+                            <span th:text="${idEdicao == null} ? 'Cadastro de usuário' : 'Editar usuário'"></span>
+                        </div>
+                        <div class="form-card-subtitle"
+                            th:text="${idEdicao == null} ? 'Preencha os dados da nova conta.' : 'Atualize os dados da conta.'"></div>
                     </div>
-                    <a class="btn btn-ghost btn-sm" th:href="@{/dashboard}">Voltar</a>
+                    <a class="btn btn-ghost btn-sm" th:href="${idEdicao == null} ? @{/dashboard} : @{/usuarios}">Voltar</a>
                 </div>
 
                 <div class="form-card-body">
@@ -47,7 +51,7 @@
                                     placeholder="nome@empresa.com" required>
                             </div>
                         </div>
-                        <div class="field">
+                        <div class="field" th:if="${idEdicao == null}">
                             <label class="field-label" for="senha">Senha <span class="req">*</span></label>
                             <div class="input-wrap has-right">
                                 <input type="password" id="senha" name="senha" minlength="8" maxlength="72"
@@ -72,13 +76,14 @@
                 <div class="form-footer">
                     <span></span>
                     <div class="form-footer-right">
-                        <a class="btn btn-cancel" th:href="@{/dashboard}">Cancelar</a>
-                        <button type="submit" class="btn btn-submit">Cadastrar usuário</button>
+                        <a class="btn btn-cancel" th:href="${idEdicao == null} ? @{/dashboard} : @{/usuarios}">Cancelar</a>
+                        <button type="submit" class="btn btn-submit"
+                            th:text="${idEdicao == null} ? 'Cadastrar usuário' : 'Salvar alterações'"></button>
                     </div>
                 </div>
             </form>
         </main>
-        <script th:src="@{/password-toggle.js}" defer></script>
+        <script th:if="${idEdicao == null}" th:src="@{/password-toggle.js}" defer></script>
     </th:block>
 </body>
 

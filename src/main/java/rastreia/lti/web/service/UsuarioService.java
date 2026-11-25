@@ -3,8 +3,11 @@ package rastreia.lti.web.service;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Locale;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
 
 import jakarta.transaction.Transactional;
 import rastreia.lti.web.models.Usuario;
@@ -96,6 +99,55 @@ public class UsuarioService {
 
         validarCpf(usuario.getCpf());
         validarSenha(usuario.getSenha());
+    }
+
+    public Usuario buscarParaEdicao(Long id) {
+        return usuarioRepository.findById(id)
+                .filter(usuario -> Boolean.TRUE.equals(usuario.getAtivo()))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @Transactional
+    public void editar(Long id, Usuario dados, Long administradorId) {
+        Usuario usuario = buscarParaEdicao(id);
+        String nome = dados.getNome() == null ? "" : dados.getNome().trim();
+        String sobrenome = dados.getSobrenome() == null ? "" : dados.getSobrenome().trim();
+        String email = dados.getEmail() == null ? "" : dados.getEmail().trim();
+        String cpf = dados.getCpf() == null ? "" : dados.getCpf().trim();
+
+        if (nome.isEmpty() || sobrenome.isEmpty() || nome.length() > 50 || sobrenome.length() > 50) {
+            throw new IllegalArgumentException("Informe nome e sobrenome com até 50 caracteres cada.");
+        }
+        if (dados.getTipo_usuario() == null) {
+            throw new IllegalArgumentException("Selecione o tipo de usuário.");
+        }
+        if (id.equals(administradorId) && dados.getTipo_usuario() != usuario.getTipo_usuario()) {
+            throw new IllegalArgumentException("Você não pode alterar o tipo da própria conta.");
+        }
+        if (!email.equals(usuario.getEmail())) {
+            if (email.length() > 100 || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+                throw new IllegalArgumentException("Informe um e-mail válido com até 100 caracteres.");
+            }
+            email = email.toLowerCase(Locale.ROOT);
+            if (usuarioRepository.existsByEmailIgnoreCaseAndIdNot(email, id)) {
+                throw new IllegalArgumentException("Este e-mail já está cadastrado.");
+            }
+            usuario.setEmail(email);
+        }
+        if (!cpf.equals(usuario.getCpf())) {
+            validarCpf(cpf);
+            String numeros = cpf.replace(".", "").replace("-", "");
+            String formatado = numeros.substring(0, 3) + "." + numeros.substring(3, 6) + "."
+                    + numeros.substring(6, 9) + "-" + numeros.substring(9);
+            if (usuarioRepository.existsByCpfInAndIdNot(List.of(numeros, formatado), id)) {
+                throw new IllegalArgumentException("Este CPF já está cadastrado.");
+            }
+            usuario.setCpf(numeros);
+        }
+        usuario.setNome(nome);
+        usuario.setSobrenome(sobrenome);
+        usuario.setTipo_usuario(dados.getTipo_usuario());
+        usuarioRepository.save(usuario);
     }
 
     public void validarSenha(String senha) {

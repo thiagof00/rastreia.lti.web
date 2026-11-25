@@ -23,32 +23,33 @@
             </div>
         </header>
         <main class="content">
+            <div class="alert alert-success show" role="status" th:if="${sucesso}" th:text="${sucesso}"></div>
             <div class="stats-row cols-4">
                 <div class="stat-card">
                     <div class="stat-icon si-purple"><i class="ti ti-users"></i></div>
                     <div class="stat-body">
                         <div class="stat-value" style="color:var(--purple-500)" th:text="${totalUsuarios}"></div>
-                        <div class="stat-label">Total cadastrados</div>
+                        <div class="stat-label">Usuários ativos</div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon si-green"><i class="ti ti-circle-check"></i></div>
                     <div class="stat-body">
-                        <div class="stat-value" style="color:var(--green-600)">3</div>
+                        <div class="stat-value" style="color:var(--green-600)" th:text="${totalAdmins}"></div>
                         <div class="stat-label">ADMINs</div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon si-amber"><i class="ti ti-route"></i></div>
                     <div class="stat-body">
-                        <div class="stat-value" style="color:var(--amber-600)">5</div>
+                        <div class="stat-value" style="color:var(--amber-600)" th:text="${totalClientes}"></div>
                         <div class="stat-label">CLIENTES</div>
                     </div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon si-gray"><i class="ti ti-circle-x"></i></div>
                     <div class="stat-body">
-                        <div class="stat-value" style="color:var(--gray-600)">2</div>
+                        <div class="stat-value" style="color:var(--gray-600)" th:text="${totalDevs}"></div>
                         <div class="stat-label">DEVs</div>
                     </div>
                 </div>

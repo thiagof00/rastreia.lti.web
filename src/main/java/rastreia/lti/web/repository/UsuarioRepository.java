@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import rastreia.lti.web.models.Usuario;
+import rastreia.lti.web.models.TipoUsuario;
+import java.util.Collection;
 
 public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
 
@@ -19,6 +21,13 @@ public interface UsuarioRepository extends CrudRepository<Usuario, Long> {
     Page<Usuario> findAllByAtivo(boolean ativo, Pageable pageable);
 
     long countByAtivo(boolean ativo);
+
+    @Query("select count(u) from Usuario u where u.ativo = true and u.tipo_usuario = :tipo")
+    long contarAtivosPorTipo(@Param("tipo") TipoUsuario tipo);
+
+    boolean existsByEmailIgnoreCaseAndIdNot(String email, Long id);
+
+    boolean existsByCpfInAndIdNot(Collection<String> cpfs, Long id);
 
     @Query("""
             select u from Usuario u

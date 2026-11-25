@@ -1,0 +1,76 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="janelas">
+    <dialog id="transporte-filtros" class="transporte-dialog" aria-labelledby="transporte-filtros-titulo">
+        <form id="transporte-form" th:action="@{/relatorios/transportes-por-cliente}">
+            <h2 id="transporte-filtros-titulo">Transportes por cliente</h2>
+            <p>O período considera a data de criação do transporte.</p>
+            <div class="fields-grid">
+                <label class="field">Cliente
+                    <select name="cliente"><option value="">Todos os clientes</option></select>
+                </label>
+                <label class="field">Período
+                    <select name="periodo">
+                        <option value="todo">Todo o período</option>
+                        <option value="mes">Mês e ano</option>
+                        <option value="intervalo">Intervalo de datas</option>
+                    </select>
+                </label>
+                <label id="transporte-mes" hidden>Mês e ano <input name="mes" type="month" disabled></label>
+                <label id="transporte-inicio" hidden>Data inicial <input name="inicio" type="date" disabled></label>
+                <label id="transporte-fim" hidden>Data final <input name="fim" type="date" disabled></label>
+                <label class="field">Status
+                    <select name="status">
+                        <option value="">Todos</option>
+                        <option value="aberto">Aberto</option>
+                        <option value="em_andamento">Em andamento</option>
+                        <option value="entregue">Entregue</option>
+                        <option value="cancelado">Cancelado</option>
+                    </select>
+                </label>
+                <label class="field input-wrap">Origem <input name="origem" maxlength="100"></label>
+                <label class="field input-wrap">Destino <input name="destino" maxlength="100"></label>
+            </div>
+            <p id="transporte-erro" role="alert"></p>
+            <div class="form-footer-right">
+                <button class="btn btn-outline" type="button" data-fechar>Cancelar</button>
+                <button class="btn btn-primary" type="submit" disabled>Gerar relatório</button>
+            </div>
+        </form>
+    </dialog>
+    <dialog id="transporte-previa" class="transporte-dialog transporte-previa" aria-labelledby="transporte-previa-titulo">
+        <section id="transporte-impressao">
+            <h2 id="transporte-previa-titulo">Transportes por cliente</h2>
+            <p id="transporte-resumo"></p>
+            <p id="transporte-quantidade"></p>
+            <table>
+                <thead><tr>
+                    <th>ID</th><th>Código LTI</th><th>Cliente</th><th>Criado em</th>
+                    <th>Origem</th><th>Destino</th><th>Peso total</th><th>Status</th>
+                </tr></thead>
+                <tbody id="transporte-linhas"></tbody>
+            </table>
+        </section>
+        <p id="transporte-aviso-impressao" role="status"></p>
+        <div class="form-footer-right transporte-acoes">
+            <button class="btn btn-outline" type="button" data-fechar>Fechar</button>
+            <button class="btn btn-primary" type="button" id="transporte-imprimir">Imprimir ou salvar em PDF</button>
+        </div>
+    </dialog>
+    <style>
+        .transporte-dialog {
+            margin: auto;
+            width: min(680px, 94vw);
+            max-height: 85vh;
+            padding: 24px;
+            overflow: auto;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            color: var(--text-1);
+        }
+        .transporte-dialog::backdrop { background: rgb(0 0 0 / 55%); }
+        .transporte-dialog h2, .transporte-dialog p, .transporte-dialog table { margin-bottom: 14px; }
+        .transporte-dialog [hidden] { display: none; }
+        .transporte-previa { width: min(1150px, 94vw); }
+        .transporte-previa th { position: static; }
+    </style>
+</th:block>

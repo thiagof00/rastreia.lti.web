@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="topbar-right">
-                <div class="search-wrap">
+                <div class="search-wrap search-wrap-expanded">
                     <i class="ti ti-search"></i>
                     <input class="search-input" id="rel-search" placeholder="Buscar relatório..."
                         oninput="relFilterReports()">
@@ -30,7 +30,7 @@
         <main class="content rel-content">
 
             <!-- Resumo -->
-            <div class="stats-row cols-4">
+            <div class="stats-row" style="grid-template-columns: repeat(2, minmax(0, 1fr))">
                 <div class="stat-card">
                     <div class="stat-icon si-blue"><i class="ti ti-report"></i></div>
                     <div class="stat-body">
@@ -45,45 +45,10 @@
                         <div class="stat-label">Gerenciais</div>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon si-amber"><i class="ti ti-filter"></i></div>
-                    <div class="stat-body">
-                        <div class="stat-value" style="color:var(--amber-600)" id="countFilters">0</div>
-                        <div class="stat-label">Filtros ativos</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon si-purple"><i class="ti ti-calendar-event"></i></div>
-                    <div class="stat-body">
-                        <div class="stat-value" style="color:var(--purple-500);font-size:18px">30 dias</div>
-                        <div class="stat-label">Período padrão</div>
-                    </div>
-                </div>
             </div>
             <div class="card">
                 <div class="card-header">
                     <div class="card-title"><i class="ti ti-list"></i> Relatórios disponíveis</div>
-                    <div class="card-actions rel-filters">
-                        <select class="filter-select" id="rel-period" onchange="relUpdateFilterCount()">
-                            <option>Últimos 7 dias</option>
-                            <option selected>Últimos 30 dias</option>
-                            <option>Últimos 90 dias</option>
-                            <option>Este ano</option>
-                            <option>Personalizado</option>
-                        </select>
-                        <select class="filter-select" id="rel-client" onchange="relUpdateFilterCount()">
-                            <option>Todos os clientes</option>
-                            <option>Cliente A</option>
-                            <option>Cliente B</option>
-                            <option>Cliente C</option>
-                        </select>
-                        <select class="filter-select" id="rel-status" onchange="relUpdateFilterCount()">
-                            <option>Todos</option>
-                            <option>Em andamento</option>
-                            <option>Finalizado</option>
-                            <option>Cancelado</option>
-                        </select>
-                    </div>
                 </div>
 
                 <div class="rel-tabs">
@@ -112,12 +77,12 @@
                         <h3>Transportes por cliente</h3>
                         <p>Lista transportes filtrados por cliente, período, origem, destino e status.</p>
                         <div class="rel-tables"><code>transportes</code><code>clientes</code></div>
+                        <span id="transporte-total" role="status"></span>
                         <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary" onclick="relGerar('Transportes por cliente')">
+                            <button type="button" class="btn btn-primary" id="transporte-gerar">
                                 <i class="ti ti-player-play"></i> Gerar
                             </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Transportes por cliente')">
+                            <button type="button" class="btn btn-outline" id="transporte-ver" disabled>
                                 <i class="ti ti-eye"></i> Prévia
                             </button>
                         </div>
@@ -513,6 +478,8 @@
                 </div>
             </div>
         </main>
+        <th:block th:replace="~{relatorios/transporte-cliente :: janelas}"></th:block>
+        <script th:src="@{/relatorio-transporte-cliente.js}" defer></script>
 
         <!-- CSS mínimo só para o grid de relatórios (não existia no global.css) -->
         <style>
@@ -531,14 +498,6 @@
                 padding-block: 10px;
             }
 
-            .rel-content .rel-filters {
-                min-width: 0;
-            }
-
-            .rel-filters .filter-select {
-                width: auto;
-                max-width: 100%;
-            }
 
             [data-tema="escuro"] .rel-card {
                 background: var(--gray-50);
@@ -769,15 +728,17 @@
             }
 
             function relFilterReports() {
-                const search = document.getElementById('rel-search').value.toLowerCase().trim();
+                const normalize = text => text.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '').trim();
+                const search = normalize(document.getElementById('rel-search').value);
                 const cards = Array.from(document.querySelectorAll('.rel-card'));
                 let visible = 0;
 
                 cards.forEach(card => {
                     const type = card.dataset.type;
-                    const name = card.dataset.name.toLowerCase();
+                    const title = normalize(card.querySelector('h3').textContent);
+                    const description = normalize(card.querySelector('p').textContent);
                     const matchesTab = relCurrentTab === 'all' || type === relCurrentTab;
-                    const matchesSearch = !search || name.includes(search);
+                    const matchesSearch = title.includes(search) || description.includes(search);
 
                     if (matchesTab && matchesSearch) {
                         card.classList.remove('rel-hidden');
@@ -802,21 +763,11 @@
                 }
             }
 
-            function relUpdateFilterCount() {
-                let count = 0;
-                ['rel-period', 'rel-client', 'rel-status'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el.selectedIndex > 0 && !el.value.startsWith('Todos')) count++;
-                });
-                document.getElementById('countFilters').textContent = count;
-            }
-
             function relGerar(nome) {
                 // Integração real: substituir por fetch/window.location para o endpoint do relatório
                 alert('Gerando relatório: ' + nome);
             }
 
-            relUpdateFilterCount();
         </script>
 
     </th:block>

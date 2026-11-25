@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,6 +59,9 @@ public class UsuariosController {
         mv.addObject("tiposUsuario", TipoUsuario.values());
         mv.addObject("usuarios", usuarios.getContent());
         mv.addObject("totalUsuarios", busca.isEmpty() ? usuarios.getTotalElements() : usuarioRepository.countByAtivo(true));
+        mv.addObject("totalAdmins", usuarioRepository.contarAtivosPorTipo(TipoUsuario.ADMIN));
+        mv.addObject("totalClientes", usuarioRepository.contarAtivosPorTipo(TipoUsuario.CLIENTE));
+        mv.addObject("totalDevs", usuarioRepository.contarAtivosPorTipo(TipoUsuario.DEV));
         mv.addObject("busca", busca);
         mv.addObject("paginaUsuarios", usuarios);
         mv.addObject("numeroPagina", numeroPagina);
@@ -105,6 +109,40 @@ public class UsuariosController {
         ModelAndView mv = formulario(dados, sessao);
         mv.addObject("erro", mensagem);
         return mv;
+    }
+
+    @GetMapping("/editar-usuario/{id}")
+    public ModelAndView abrirEdicao(@PathVariable Long id,
+            @RequestAttribute(name = "usuarioLogado", required = false) Usuario usuarioLogado, HttpSession sessao) {
+        validarAdministrador(usuarioLogado);
+        return formulario(usuarioService.buscarParaEdicao(id), sessao).addObject("idEdicao", id);
+    }
+
+    @PostMapping("/editar-usuario/{id}")
+    public ModelAndView editar(@PathVariable Long id,
+            @RequestAttribute(name = "usuarioLogado", required = false) Usuario usuarioLogado,
+            @ModelAttribute("usuarioForm") Usuario dados, BindingResult erros,
+            @RequestParam(name = "tokenCadastro", required = false) String tokenCadastro,
+            HttpSession sessao, RedirectAttributes redirect) {
+        validarAdministrador(usuarioLogado);
+        if (tokenCadastro == null || !tokenCadastro.equals(sessao.getAttribute(TOKEN_CADASTRO))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Abra novamente o formulário de edição.");
+        }
+
+        String mensagem = "Confira os dados informados no formulário.";
+        if (!erros.hasErrors()) {
+            try {
+                usuarioService.editar(id, dados, usuarioLogado.getId());
+                redirect.addFlashAttribute("sucesso", "Usuário atualizado com sucesso.");
+                return new ModelAndView("redirect:/usuarios");
+            } catch (IllegalArgumentException e) {
+                mensagem = e.getMessage();
+            } catch (DataIntegrityViolationException e) {
+                mensagem = "O banco recusou a alteração. Confira se o CPF ou e-mail já está em uso.";
+            }
+        }
+        dados.setSenha(null);
+        return formulario(dados, sessao).addObject("idEdicao", id).addObject("erro", mensagem);
     }
 
     private ModelAndView formulario(Usuario usuario, HttpSession sessao) {
