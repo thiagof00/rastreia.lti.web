@@ -3,6 +3,9 @@ package rastreia.lti.web.controllers;
 import java.util.UUID;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -34,15 +37,33 @@ public class UsuariosController {
     }
 
     @GetMapping("/usuarios")
-    public ModelAndView index(@RequestAttribute(name = "usuarioLogado", required = false) Usuario usuarioLogado) {
+    public ModelAndView index(
+            @RequestAttribute(name = "usuarioLogado", required = false) Usuario usuarioLogado,
+            @RequestParam(name = "pagina", defaultValue = "1") int pagina,
+            @RequestParam(name = "busca", defaultValue = "") String busca) {
         validarAdministrador(usuarioLogado);
+        int numeroPagina = Math.max(1, pagina);
+        busca = busca.strip();
+        PageRequest paginacao = PageRequest.of(numeroPagina - 1, 10, Sort.by("id"));
+        Page<Usuario> usuarios = busca.isEmpty()
+                ? usuarioRepository.findAllByAtivo(true, paginacao)
+                : usuarioRepository.buscarAtivos(busca, paginacao);
+        int ultimaPagina = Math.max(1, usuarios.getTotalPages());
+        if (numeroPagina > ultimaPagina) {
+            return new ModelAndView("redirect:/usuarios?pagina=" + ultimaPagina).addObject("busca", busca);
+        }
+
         ModelAndView mv = new ModelAndView("usuarios/index");
         mv.addObject("paginaAtiva", "usuarios");
         mv.addObject("tiposUsuario", TipoUsuario.values());
-        mv.addObject("usuarios", usuarioRepository.findAllByAtivo(true));
-        mv.addObject("totalUsuarios", usuarioRepository.countByAtivo(true));
+        mv.addObject("usuarios", usuarios.getContent());
+        mv.addObject("totalUsuarios", busca.isEmpty() ? usuarios.getTotalElements() : usuarioRepository.countByAtivo(true));
+        mv.addObject("busca", busca);
+        mv.addObject("paginaUsuarios", usuarios);
+        mv.addObject("numeroPagina", numeroPagina);
+        mv.addObject("primeiroRegistro", usuarios.getPageable().getOffset() + 1);
+        mv.addObject("ultimoRegistro", usuarios.getPageable().getOffset() + usuarios.getNumberOfElements());
         return mv;
-
     }
 
     @GetMapping("/novo-usuario")

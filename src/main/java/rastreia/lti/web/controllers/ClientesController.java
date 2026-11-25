@@ -27,17 +27,23 @@ public class ClientesController {
     }
 
     @GetMapping("/clientes")
-    public ModelAndView index(@RequestParam(defaultValue = "1") int pagina) {
+    public ModelAndView index(
+            @RequestParam(name = "pagina", defaultValue = "1") int pagina,
+            @RequestParam(name = "busca", defaultValue = "") String busca) {
         int numeroPagina = Math.max(1, pagina);
-        Page<Cliente> clientes = clienteRepository.findAll(
-                PageRequest.of(numeroPagina - 1, 10, Sort.by("id")));
+        busca = busca.strip();
+        PageRequest paginacao = PageRequest.of(numeroPagina - 1, 10, Sort.by("id"));
+        Page<Cliente> clientes = busca.isEmpty()
+                ? clienteRepository.findAll(paginacao)
+                : clienteRepository.buscar(busca, paginacao);
         int ultimaPagina = Math.max(1, clientes.getTotalPages());
         if (numeroPagina > ultimaPagina) {
-            return new ModelAndView("redirect:/clientes?pagina=" + ultimaPagina);
+            return new ModelAndView("redirect:/clientes?pagina=" + ultimaPagina).addObject("busca", busca);
         }
 
         ModelAndView mv = new ModelAndView("clientes/index");
-        mv.addObject("totalClientes", clientes.getTotalElements());
+        mv.addObject("totalClientes", busca.isEmpty() ? clientes.getTotalElements() : clienteRepository.count());
+        mv.addObject("busca", busca);
         mv.addObject("clientes", clientes.getContent());
         mv.addObject("paginaClientes", clientes);
         mv.addObject("numeroPagina", numeroPagina);

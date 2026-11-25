@@ -80,7 +80,7 @@ public class CaminhoesController {
             caminhaoRepository.save(caminhao);
             return "redirect:/caminhoes";
         } catch (Exception e) {
-            ModelAndView mv = new ModelAndView("caminhoes/form");
+            ModelAndView mv = new ModelAndView("caminhoes/formNewCaminhao");
             mv.addObject("paginaAtiva", "caminhoes");
             mv.addObject("caminhaoForm", caminhao);
             mv.addObject("erro", "Erro ao cadastrar: " + e.getMessage());

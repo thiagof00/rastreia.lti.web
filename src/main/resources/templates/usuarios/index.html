@@ -12,11 +12,14 @@
                 </div>
             </div>
             <div class="topbar-right">
-                <div class="search-wrap"><i class="ti ti-search"></i><input class="search-input"
-                        placeholder="Buscar por nome ou CPF..."></div>
+                <form class="search-wrap search-wrap-expanded" id="busca-lista" method="get" th:action="@{/usuarios}">
+                    <i class="ti ti-search" aria-hidden="true"></i>
+                    <input class="search-input" type="search" name="busca" th:value="${busca}"
+                        aria-label="Buscar usuarios" placeholder="Buscar por nome, CPF ou e-mail...">
+                </form>
                 <button class="btn btn-primary" th:onclick="|window.location.href='@{/novo-usuario}'|"><i
                         class="ti ti-user-plus"></i>
-                    Cadastrar</button>
+                    Cadastrar Usuário</button>
             </div>
         </header>
         <main class="content">
@@ -50,7 +53,7 @@
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card lista-paginada" id="resultados-busca">
                 <div class="card-header">
                     <div class="card-title"><i class="ti ti-list"></i> Lista de usuários</div>
                     <div class="card-actions">
@@ -103,16 +106,26 @@
                     </table>
                 </div>
                 <div class="pagination">
-                    <span class="pagination-info">Mostrando 1–5 de 10 registros</span>
-                    <div class="pagination-btns">
-                        <button class="page-btn" disabled><i class="ti ti-chevron-left"></i></button>
-                        <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn"><i class="ti ti-chevron-right"></i></button>
-                    </div>
+                    <span class="pagination-info"
+                        th:text="${paginaUsuarios.totalElements == 0} ? 'Nenhum usuário encontrado' : |Mostrando ${primeiroRegistro}–${ultimoRegistro} de ${paginaUsuarios.totalElements} registros|"></span>
+                    <nav class="pagination-btns" aria-label="Páginas de usuários" th:if="${paginaUsuarios.totalPages > 1}">
+                        <a class="page-btn" aria-label="Página anterior" th:if="${paginaUsuarios.hasPrevious()}"
+                            th:href="@{/usuarios(pagina=${numeroPagina - 1},busca=${busca})}"><i class="ti ti-chevron-left"></i></a>
+                        <button class="page-btn" type="button" aria-label="Página anterior"
+                            th:unless="${paginaUsuarios.hasPrevious()}" disabled><i class="ti ti-chevron-left"></i></button>
+                        <a class="page-btn" th:each="pagina : ${#numbers.sequence(1, paginaUsuarios.totalPages)}"
+                            th:href="@{/usuarios(pagina=${pagina},busca=${busca})}" th:text="${pagina}"
+                            th:classappend="${pagina == numeroPagina} ? 'active'"
+                            th:attr="aria-current=${pagina == numeroPagina} ? 'page' : null"></a>
+                        <a class="page-btn" aria-label="Próxima página" th:if="${paginaUsuarios.hasNext()}"
+                            th:href="@{/usuarios(pagina=${numeroPagina + 1},busca=${busca})}"><i class="ti ti-chevron-right"></i></a>
+                        <button class="page-btn" type="button" aria-label="Próxima página"
+                            th:unless="${paginaUsuarios.hasNext()}" disabled><i class="ti ti-chevron-right"></i></button>
+                    </nav>
                 </div>
             </div>
         </main>
+        <script th:src="@{/busca-lista.js}" defer></script>
 
     </th:block>
 </body>

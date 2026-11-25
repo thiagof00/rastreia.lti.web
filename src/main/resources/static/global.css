@@ -805,6 +805,10 @@ tbody tr:hover .row-actions {
   color: var(--text-3);
 }
 
+.search-wrap-expanded .search-input {
+  width: clamp(200px, 24vw, 280px);
+}
+
 /* ══ Topbar ══ */
 .topbar {
   height: var(--topbar-h);
@@ -1804,20 +1808,25 @@ table {
   width: 100%;
 }
 
-.clientes-card {
+.clientes-card,
+.lista-paginada {
   flex-shrink: 0;
 }
 
-.clientes-card :is(.table-wrap, table, tbody) {
+:is(.clientes-card, .lista-paginada) :is(.table-wrap, table, tbody) {
   max-height: none;
 }
 
-.clientes-card .pagination-btns {
+.lista-paginada th {
+  position: static;
+}
+
+:is(.clientes-card, .lista-paginada) .pagination-btns {
   flex-wrap: wrap;
   justify-content: flex-end;
 }
 
-.clientes-card a.page-btn {
+:is(.clientes-card, .lista-paginada) a.page-btn {
   text-decoration: none;
 }
 
