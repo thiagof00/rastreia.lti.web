@@ -29,6 +29,7 @@ public class ClientesController {
     @GetMapping("/clientes")
     public ModelAndView index(@RequestParam(defaultValue = "1") int pagina) {
         int numeroPagina = Math.max(1, pagina);
+
         Page<Cliente> clientes = clienteRepository.findAll(
                 PageRequest.of(numeroPagina - 1, 10, Sort.by("id")));
         int ultimaPagina = Math.max(1, clientes.getTotalPages());

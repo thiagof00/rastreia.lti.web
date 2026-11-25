@@ -2,12 +2,16 @@ package rastreia.lti.web.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -21,14 +25,27 @@ public class CaminhoesController {
     CaminhaoRepository caminhaoRepository;
 
     @GetMapping("/caminhoes")
-    public ModelAndView index() {
-        ModelAndView mv = new ModelAndView("caminhoes/index");
-        Long totalCaminhoes = caminhaoRepository.count();
-        Iterable<Caminhao> caminhoesAtivos = caminhaoRepository.findAllByAtivo(true);
+    public ModelAndView index(@RequestParam(defaultValue = "1") int pagina) {
+        int numeroPagina = Math.max(1, pagina);
 
+        Page<Caminhao> caminhoesAtivos = caminhaoRepository.findAllByAtivo(true,
+                PageRequest.of(numeroPagina - 1, 10, Sort.by("id")));
+
+        int ultimaPagina = Math.max(1, caminhoesAtivos.getTotalPages());
+
+        if (numeroPagina > ultimaPagina) {
+            return new ModelAndView("redirect:/caminhoes?pagina=" + ultimaPagina);
+
+        }
+        ModelAndView mv = new ModelAndView("caminhoes/index");
         mv.addObject("paginaAtiva", "caminhoes");
-        mv.addObject("caminhoes", caminhoesAtivos);
-        mv.addObject("totalCaminhoes", totalCaminhoes);
+        mv.addObject("caminhoes", caminhoesAtivos.getContent());
+        mv.addObject("totalCaminhoes", caminhoesAtivos.getTotalElements());
+        mv.addObject("paginaCaminhoes", caminhoesAtivos);
+        mv.addObject("numeroPagina", numeroPagina);
+        mv.addObject("primeiroRegistro", caminhoesAtivos.getPageable().getOffset() + 1);
+        mv.addObject("ultimoRegistro",
+                caminhoesAtivos.getPageable().getOffset() + caminhoesAtivos.getNumberOfElements());
 
         return mv;
     }

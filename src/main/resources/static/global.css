@@ -131,11 +131,11 @@
   color: var(--green-600);
 }
 
-[data-tema="escuro"] .radio-option.status-ocioso input:checked + .radio-label {
+[data-tema="escuro"] .radio-option.status-ocioso input:checked+.radio-label {
   color: var(--green-600);
 }
 
-[data-tema="escuro"] .radio-option.status-manut input:checked + .radio-label {
+[data-tema="escuro"] .radio-option.status-manut input:checked+.radio-label {
   color: var(--blue-600);
 }
 
@@ -1004,7 +1004,7 @@ tbody tr:hover .row-actions {
   position: relative;
   z-index: 1;
   animation: loginIn 0.5s cubic-bezier(.22, .68, 0, 1.2) both;
-   overflow-y: hidden;
+  overflow-y: hidden;
 }
 
 .login-logo {
@@ -1689,7 +1689,23 @@ textarea::placeholder {
   overflow: hidden;
   animation: fadeUp 0.35s ease both;
   animation-delay: 0.25s;
+  flex-shrink: 0;
 }
+
+
+.card :is(.table-wrap, table, tbody) {
+  max-height: none;
+}
+
+.card .pagination-btns {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.card a.page-btn {
+  text-decoration: none;
+}
+
 
 .card-header {
   padding: 14px 18px;
@@ -1803,24 +1819,6 @@ table {
   max-height: 40vh;
   width: 100%;
 }
-
-.clientes-card {
-  flex-shrink: 0;
-}
-
-.clientes-card :is(.table-wrap, table, tbody) {
-  max-height: none;
-}
-
-.clientes-card .pagination-btns {
-  flex-wrap: wrap;
-  justify-content: flex-end;
-}
-
-.clientes-card a.page-btn {
-  text-decoration: none;
-}
-
 
 table {
   width: 100%;
@@ -2838,22 +2836,22 @@ thead th .sort-icon {
 }
 
 .btn.btn-primary {
-    background: var(--purple-500);
-    color: #fff;
-    border-color: var(--purple-700);
+  background: var(--purple-500);
+  color: #fff;
+  border-color: var(--purple-700);
 }
 
 .btn.btn-primary:hover {
-    background: var(--purple-700);
+  background: var(--purple-700);
 }
 
 /* MODO ESCURO */
 html[data-tema="escuro"] .btn.btn-primary {
-    background: var(--purple-500);
-    color: #21183B;
-    border-color: var(--purple-700);
+  background: var(--purple-500);
+  color: #21183B;
+  border-color: var(--purple-700);
 }
 
 html[data-tema="escuro"] .btn.btn-primary:hover {
-    background: var(--purple-700);
+  background: var(--purple-700);
 }

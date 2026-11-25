@@ -2,15 +2,20 @@ package rastreia.lti.web.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import rastreia.lti.web.models.Motorista;
 import rastreia.lti.web.repository.MotoristaRepository;
 
@@ -21,13 +26,25 @@ public class MotoristasController {
     MotoristaRepository motoristaRepository;
 
     @GetMapping("/motoristas")
-    public ModelAndView index() {
-        ModelAndView mv = new ModelAndView("motoristas/index");
-        Long totalMotoristas = motoristaRepository.count();
+    public ModelAndView index(@RequestParam(defaultValue = "1") int pagina) {
+        int numeroPagina = Math.max(1, pagina);
 
+        Page<Motorista> motoristasAtivos = motoristaRepository.findAllByAtivo(true,
+                PageRequest.of(numeroPagina - 1, 10, Sort.by("id")));
+        int ultimaPagina = Math.max(1, motoristasAtivos.getTotalPages());
+        if (numeroPagina > ultimaPagina) {
+            return new ModelAndView("redirect:/motoristas?pagina=" + ultimaPagina);
+        }
+
+        ModelAndView mv = new ModelAndView("motoristas/index");
+        mv.addObject("totalMotoristas", motoristasAtivos.getTotalElements());
+        mv.addObject("motoristas", motoristasAtivos.getContent());
+        mv.addObject("paginaMotoristas", motoristasAtivos);
+        mv.addObject("numeroPagina", numeroPagina);
+        mv.addObject("primeiroRegistro", motoristasAtivos.getPageable().getOffset() + 1);
+        mv.addObject("ultimoRegistro",
+                motoristasAtivos.getPageable().getOffset() + motoristasAtivos.getNumberOfElements());
         mv.addObject("paginaAtiva", "motoristas");
-        mv.addObject("motoristas", motoristaRepository.findAllByAtivo(true));
-        mv.addObject("totalMotoristas", totalMotoristas);
         return mv;
     }
 
