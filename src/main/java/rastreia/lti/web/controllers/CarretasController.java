@@ -2,12 +2,16 @@ package rastreia.lti.web.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,12 +26,28 @@ public class CarretasController {
     CarretasRepository carretasRepository;
 
     @GetMapping("/carretas")
-    public ModelAndView index() {
+    public ModelAndView index(@RequestParam(defaultValue = "1") int pagina) {
+        int numeroPagina = Math.max(1, pagina);
+
+        Page<Carreta> carretasAtivas = carretasRepository.findAllByAtivo(true,
+                PageRequest.of(numeroPagina - 1, 10, Sort.by("id")));
+
+        int ultimaPagina = Math.max(1, carretasAtivas.getTotalPages());
+
+        if (numeroPagina > ultimaPagina) {
+            return new ModelAndView("redirect:/carretas?pagina=" + ultimaPagina);
+
+        }
         ModelAndView mv = new ModelAndView("carretas/index");
-        Long totalCarretas = carretasRepository.count();
         mv.addObject("paginaAtiva", "carretas");
-        mv.addObject("carretas", carretasRepository.findAllByAtivo(true));
-        mv.addObject("totalCarretas", totalCarretas);
+        mv.addObject("carretas", carretasAtivas.getContent());
+        mv.addObject("totalCarretas", carretasAtivas.getTotalElements());
+        mv.addObject("paginaCarretas", carretasAtivas);
+        mv.addObject("numeroPagina", numeroPagina);
+        mv.addObject("primeiroRegistro", carretasAtivas.getPageable().getOffset() + 1);
+        mv.addObject("ultimoRegistro",
+                carretasAtivas.getPageable().getOffset() + carretasAtivas.getNumberOfElements());
+
         return mv;
     }
 

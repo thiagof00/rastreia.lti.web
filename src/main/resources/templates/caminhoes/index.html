@@ -105,16 +105,27 @@
                         </tbody>
                     </table>
                 </div>
-                <!-- <div class="pagination">
-                    <span class="pagination-info">Mostrando 1–5 de 12 registros</span>
-                    <div class="pagination-btns">
-                        <button class="page-btn" disabled><i class="ti ti-chevron-left"></i></button>
-                        <button class="page-btn active">1</button>
-                        <button class="page-btn">2</button>
-                        <button class="page-btn">3</button>
-                        <button class="page-btn"><i class="ti ti-chevron-right"></i></button>
-                    </div>
-                </div> -->
+                <div class="pagination">
+                    <span class="pagination-info"
+                        th:text="${totalCaminhoes == 0} ? 'Nenhum caminhão cadastrado' : |Mostrando ${primeiroRegistro}–${ultimoRegistro} de ${totalCaminhoes} registros|"></span>
+                    <nav class="pagination-btns" aria-label="Páginas de caminhões"
+                        th:if="${paginaCaminhoes.totalPages > 1}">
+                        <a class="page-btn" aria-label="Página anterior" th:if="${paginaCaminhoes.hasPrevious()}"
+                            th:href="@{/caminhoes(pagina=${numeroPagina - 1})}"><i class="ti ti-chevron-left"></i></a>
+                        <button class="page-btn" type="button" aria-label="Página anterior"
+                            th:unless="${paginaCaminhoes.hasPrevious()}" disabled><i
+                                class="ti ti-chevron-left"></i></button>
+                        <a class="page-btn" th:each="pagina : ${#numbers.sequence(1, paginaCaminhoes.totalPages)}"
+                            th:href="@{/caminhoes(pagina=${pagina})}" th:text="${pagina}"
+                            th:classappend="${pagina == numeroPagina} ? 'active'"
+                            th:attr="aria-current=${pagina == numeroPagina} ? 'page' : null"></a>
+                        <a class="page-btn" aria-label="Próxima página" th:if="${paginaCaminhoes.hasNext()}"
+                            th:href="@{/caminhoes(pagina=${numeroPagina + 1})}"><i class="ti ti-chevron-right"></i></a>
+                        <button class="page-btn" type="button" aria-label="Próxima página"
+                            th:unless="${paginaCaminhoes.hasNext()}" disabled><i
+                                class="ti ti-chevron-right"></i></button>
+                    </nav>
+                </div>
             </div>
         </main>
 
