@@ -115,6 +115,143 @@ public class TransportesPorClienteController {
                 rs.getString("transporte_status")));
     }
 
+    @GetMapping("/etapas")
+    public List<EtapaLinha> etapas(@RequestAttribute Usuario usuarioLogado, @RequestParam long transporteId) {
+        verificarAcesso(usuarioLogado);
+        var parametros = parametrosDoTransporte(transporteId);
+        return jdbc.query("""
+                SELECT id, observacoes, criado_em, atualizado_em
+                FROM etapas_transporte
+                WHERE id_transporte = :transporteId
+                ORDER BY criado_em, id
+                """, parametros, (rs, linha) -> new EtapaLinha(rs.getLong("id"), rs.getString("observacoes"),
+                        rs.getObject("criado_em", java.time.LocalDateTime.class),
+                        rs.getObject("atualizado_em", java.time.LocalDateTime.class)));
+    }
+
+    @GetMapping("/pedidos")
+    public List<PedidoLinha> pedidos(@RequestAttribute Usuario usuarioLogado, @RequestParam long transporteId) {
+        verificarAcesso(usuarioLogado);
+        return jdbc.query("""
+                SELECT p.id, p.numero, p.serie, p.data_emissao
+                FROM transporte_pedido tp
+                JOIN pedido p ON p.id = tp.id_pedido
+                WHERE tp.id_transporte = :transporteId
+                ORDER BY p.data_emissao DESC, p.id DESC
+                """, parametrosDoTransporte(transporteId), (rs, linha) -> new PedidoLinha(
+                        rs.getLong("id"), rs.getString("numero"), rs.getString("serie"),
+                        rs.getObject("data_emissao", LocalDate.class)));
+    }
+
+    @GetMapping("/nfe")
+    public List<NotaFiscalLinha> notasFiscais(@RequestAttribute Usuario usuarioLogado, @RequestParam long transporteId) {
+        verificarAcesso(usuarioLogado);
+        return jdbc.query("""
+                SELECT n.id, n.numero, n.serie
+                FROM transporte_nfe tn
+                JOIN nfe n ON n.id = tn.id_nfe
+                WHERE tn.id_transporte = :transporteId
+                ORDER BY n.id DESC
+                """, parametrosDoTransporte(transporteId), (rs, linha) -> new NotaFiscalLinha(
+                        rs.getLong("id"), rs.getString("numero"), rs.getString("serie")));
+    }
+
+    public record NotaFiscalLinha(long id, String numero, String serie) {}
+
+    private MapSqlParameterSource parametrosDoTransporte(long transporteId) {
+        if (transporteId <= 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Informe um ID de transporte válido.");
+        }
+        var parametros = new MapSqlParameterSource("transporteId", transporteId);
+        if (jdbc.queryForObject("SELECT COUNT(*) FROM transporte WHERE id = :transporteId", parametros, Integer.class) == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Transporte não encontrado.");
+        }
+        return parametros;
+    }
+
+    public record PedidoLinha(long id, String numero, String serie, LocalDate dataEmissao) {}
+
+    @GetMapping("/motoristas")
+    public List<ClienteOpcao> motoristas(@RequestAttribute Usuario usuarioLogado) {
+        verificarAcesso(usuarioLogado);
+        return jdbc.query("""
+                SELECT id, CONCAT_WS(' ', nome, sobrenome) AS nome FROM motoristas ORDER BY nome, id
+                """, (rs, linha) -> new ClienteOpcao(rs.getLong("id"), rs.getString("nome")));
+    }
+
+    @GetMapping("/etapas-motorista")
+    public List<EtapaMotorista> etapasMotorista(@RequestAttribute Usuario usuarioLogado,
+            @RequestParam long motoristaId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        verificarAcesso(usuarioLogado);
+        return consultarEtapas("e.id_motorista", motoristaId, inicio, fim);
+    }
+
+    @GetMapping("/caminhoes")
+    public List<ClienteOpcao> caminhoes(@RequestAttribute Usuario usuarioLogado) {
+        verificarAcesso(usuarioLogado);
+        return jdbc.query("""
+                SELECT id, CONCAT_WS(' · ', placa, NULLIF(modelo, '')) AS nome
+                FROM caminhoes ORDER BY placa, id
+                """, (rs, linha) -> new ClienteOpcao(rs.getLong("id"), rs.getString("nome")));
+    }
+
+    @GetMapping("/etapas-caminhao")
+    public List<EtapaMotorista> etapasCaminhao(@RequestAttribute Usuario usuarioLogado,
+            @RequestParam long caminhaoId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        verificarAcesso(usuarioLogado);
+        return consultarEtapas("e.id_caminhao", caminhaoId, inicio, fim);
+    }
+
+    @GetMapping("/carretas")
+    public List<ClienteOpcao> carretas(@RequestAttribute Usuario usuarioLogado) {
+        verificarAcesso(usuarioLogado);
+        return jdbc.query("""
+                SELECT id, CONCAT_WS(' · ', placa, NULLIF(tipo, '')) AS nome
+                FROM carretas ORDER BY placa, id
+                """, (rs, linha) -> new ClienteOpcao(rs.getLong("id"), rs.getString("nome")));
+    }
+
+    @GetMapping("/etapas-carreta")
+    public List<EtapaMotorista> etapasCarreta(@RequestAttribute Usuario usuarioLogado,
+            @RequestParam long carretaId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim) {
+        verificarAcesso(usuarioLogado);
+        return consultarEtapas("e.id_carreta", carretaId, inicio, fim);
+    }
+
+    private List<EtapaMotorista> consultarEtapas(String coluna, long id, LocalDate inicio, LocalDate fim) {
+        if (id <= 0 || (inicio == null) != (fim == null)
+                || (inicio != null && (fim.isBefore(inicio) || inicio.getYear() < 1000 || fim.getYear() > 9998))) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Confira a seleção e o período.");
+        }
+        var parametros = new MapSqlParameterSource("id", id);
+        String sql = """
+                SELECT e.id, e.id_transporte, e.observacoes, e.criado_em, t.status
+                FROM etapas_transporte e
+                LEFT JOIN transporte t ON t.id = e.id_transporte
+                WHERE %s = :id
+                """.formatted(coluna);
+        if (inicio != null) {
+            sql += " AND e.criado_em >= :inicio AND e.criado_em < :fim";
+            parametros.addValue("inicio", inicio.atStartOfDay()).addValue("fim", fim.plusDays(1).atStartOfDay());
+        }
+        return jdbc.query(sql + " ORDER BY e.criado_em DESC, e.id DESC", parametros, (rs, linha) -> {
+            var criado = rs.getObject("criado_em", java.time.LocalDateTime.class);
+            return new EtapaMotorista(rs.getLong("id"), rs.getObject("id_transporte", Long.class),
+                    rs.getString("observacoes"), criado == null ? null : criado.format(DATA_HORA), rs.getString("status"));
+        });
+    }
+
+    public record EtapaMotorista(long id, Long transporteId, String observacoes, String criadoEm, String status) {}
+
+    public record EtapaLinha(long id, String observacoes, java.time.LocalDateTime criadoEm,
+            java.time.LocalDateTime atualizadoEm) {}
+
     private void verificarAcesso(Usuario usuario) {
         if (usuario.getTipo_usuario() != TipoUsuario.ADMIN && usuario.getTipo_usuario() != TipoUsuario.DEV) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);

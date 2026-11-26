@@ -4,15 +4,71 @@
     const form = document.getElementById('transporte-form');
     const erro = document.getElementById('transporte-erro');
     const gerar = form.querySelector('[type="submit"]');
-    const ver = document.getElementById('transporte-ver');
     const campos = form.elements;
+    const resultados = new Map();
+    const selecoes = {
+        motorista: { campo: campos.motoristaId, lista: '/motoristas', consulta: '/etapas-motorista' },
+        caminhao: { campo: campos.caminhaoId, lista: '/caminhoes', consulta: '/etapas-caminhao' },
+        carreta: { campo: campos.carretaId, lista: '/carretas', consulta: '/etapas-carreta' }
+    };
+    let cartaoAtual;
+    let gerando = false;
     let clientesCarregados = false;
     let carregandoClientes = false;
 
-    document.getElementById('transporte-gerar').addEventListener('click', async () => {
+    async function abrirFiltros(cartao) {
+        if (gerando) return;
+        if (cartaoAtual !== cartao) {
+            form.reset();
+            campos.periodo.dispatchEvent(new Event('change'));
+        }
+        cartaoAtual = cartao;
+        const porCliente = cartao.dataset.transporte === 'cliente';
+        const porEtapas = ['etapas', 'pedidos', 'nfe'].includes(cartao.dataset.transporte);
+        const tipo = cartao.dataset.transporte;
+        const selecao = selecoes[tipo];
+        for (const [chave, { campo }] of Object.entries(selecoes)) {
+            const visivel = chave === tipo;
+            campo.closest('label').hidden = !visivel;
+            campo.disabled = !visivel;
+            campo.required = visivel;
+        }
+        campos.periodo.querySelector('[value="mes"]').hidden = Boolean(selecao);
+        for (const nome of ['status', 'origem', 'destino']) {
+            campos[nome].closest('label').hidden = Boolean(selecao);
+        }
+        form.querySelector('[data-explicacao-periodo]').textContent = selecao
+            ? 'O período considera a data de criação da etapa.'
+            : 'O período considera a data de criação do transporte.';
+        form.querySelector('.fields-grid').hidden = porEtapas;
+        form.querySelector('[data-explicacao-periodo]').hidden = porEtapas;
+        campos.transporteId.closest('label').hidden = !porEtapas;
+        campos.transporteId.disabled = !porEtapas;
+        campos.transporteId.required = porEtapas;
+        gerar.textContent = porEtapas || selecao ? 'Consultar' : 'Gerar relatório';
+        campos.cliente.disabled = !porCliente;
+        campos.cliente.closest('label').hidden = !porCliente;
+        gerar.disabled = (porCliente && !clientesCarregados) || (selecao && !selecao.campo.dataset.carregado);
+        filtros.querySelector('h2').textContent = cartao.querySelector('h3').textContent;
         erro.textContent = '';
         filtros.showModal();
-        if (clientesCarregados || carregandoClientes) return;
+        if (selecao && !selecao.campo.dataset.carregado) {
+            try {
+                const resposta = await fetch(form.action + selecao.lista);
+                if (!resposta.ok) throw new Error();
+                const opcoes = await resposta.json();
+                selecao.campo.options.length = 1;
+                for (const opcao of opcoes) {
+                    selecao.campo.add(new Option(opcao.nome, opcao.id));
+                }
+                selecao.campo.dataset.carregado = 'true';
+                if (cartaoAtual === cartao && !gerando) gerar.disabled = false;
+            } catch {
+                if (cartaoAtual === cartao) erro.textContent = 'Não foi possível carregar as opções.';
+            }
+            return;
+        }
+        if (!porCliente || clientesCarregados || carregandoClientes) return;
         carregandoClientes = true;
         try {
             const resposta = await fetch(form.action + '/clientes');
@@ -21,13 +77,15 @@
                 campos.cliente.add(new Option(cliente.nome, cliente.id));
             }
             clientesCarregados = true;
-            gerar.disabled = false;
+            if (!gerando) gerar.disabled = false;
         } catch {
-            erro.textContent = 'Não foi possível carregar os clientes. Feche a janela e tente novamente.';
+            if (cartaoAtual === cartao) {
+                erro.textContent = 'Não foi possível carregar os clientes. Feche a janela e tente novamente.';
+            }
         } finally {
             carregandoClientes = false;
         }
-    });
+    }
 
     campos.periodo.addEventListener('change', () => {
         for (const [nome, mostrar] of [
@@ -49,6 +107,11 @@
         evento.preventDefault();
         erro.textContent = '';
         const dados = new FormData(form);
+        const tipo = cartaoAtual.dataset.transporte;
+        const porPedidos = tipo === 'pedidos';
+        const porNfe = tipo === 'nfe';
+        const porEtapas = tipo === 'etapas' || porPedidos || porNfe;
+        const selecao = selecoes[cartaoAtual.dataset.transporte];
         const dataBr = valor => valor.split('-').reverse().join('/');
         if (dados.get('periodo') === 'intervalo' && dados.get('fim') < dados.get('inicio')) {
             erro.textContent = 'A data final deve ser igual ou posterior à inicial.';
@@ -59,44 +122,99 @@
             mes: dados.get('mes') ? dataBr(dados.get('mes')) : '',
             intervalo: dados.get('inicio') ? dataBr(dados.get('inicio')) + ' a ' + dataBr(dados.get('fim')) : ''
         }[dados.get('periodo')];
-        const resumo = [
-            campos.cliente.selectedOptions[0].text,
+        const resumo = porEtapas ? 'Transporte #' + dados.get('transporteId') : selecao
+            ? selecao.campo.selectedOptions[0].text + ' · ' + periodo : [
+            dados.has('cliente') ? campos.cliente.selectedOptions[0].text : '',
             periodo,
             'Status: ' + campos.status.selectedOptions[0].text,
             'Origem: ' + (campos.origem.value.trim() || 'Todas'),
             'Destino: ' + (campos.destino.value.trim() || 'Todos')
-        ].join(' · ');
+        ].filter(Boolean).join(' · ');
 
+        gerando = true;
         gerar.disabled = true;
         try {
-            const resposta = await fetch(form.action + '?' + new URLSearchParams(dados));
+            let url = porEtapas
+                ? form.action + '/' + tipo + '?' + new URLSearchParams({ transporteId: dados.get('transporteId') })
+                : form.action + '?' + new URLSearchParams(dados);
+            if (selecao) {
+                const parametros = new URLSearchParams({ [selecao.campo.name]: dados.get(selecao.campo.name) });
+                if (dados.get('periodo') === 'intervalo') {
+                    parametros.set('inicio', dados.get('inicio'));
+                    parametros.set('fim', dados.get('fim'));
+                }
+                url = form.action + selecao.consulta + '?' + parametros;
+            }
+            const resposta = await fetch(url);
+            if (porEtapas && resposta.status === 404) {
+                erro.textContent = 'Transporte não encontrado. Confira o ID informado.';
+                return;
+            }
             if (!resposta.ok) throw new Error();
             const transportes = await resposta.json();
-            const linhas = document.getElementById('transporte-linhas');
-            linhas.replaceChildren();
-            for (const transporte of transportes) {
-                const status = [...campos.status.options].find(opcao => opcao.value === transporte.status);
-                const linha = linhas.insertRow();
-                for (const valor of [transporte.id, transporte.lti, transporte.cliente, transporte.criadoEm,
-                    transporte.origem, transporte.destino, transporte.peso, status?.text ?? transporte.status]) {
-                    linha.insertCell().textContent = valor ?? '—';
-                }
-            }
-            const total = transportes.length ? transportes.length + ' transporte(s) encontrado(s)'
-                : 'Nenhum transporte encontrado';
-            document.getElementById('transporte-total').textContent = total;
-            document.getElementById('transporte-quantidade').textContent = total;
-            document.getElementById('transporte-resumo').textContent = resumo;
-            ver.disabled = false;
+            const total = porNfe
+                ? (transportes.length ? transportes.length + ' NF-e vinculada(s)' : 'Nenhuma NF-e vinculada')
+                : porPedidos
+                ? (transportes.length ? transportes.length + ' pedido(s) encontrado(s)' : 'Nenhum pedido vinculado')
+                : porEtapas || selecao
+                ? (transportes.length ? transportes.length + ' etapa(s) encontrada(s)' : 'Nenhuma etapa encontrada')
+                : (transportes.length ? transportes.length + ' transporte(s) encontrado(s)' : 'Nenhum transporte encontrado');
+            resultados.set(cartaoAtual, { transportes, resumo, total });
+            cartaoAtual.querySelector('[data-transporte-total]').textContent = total;
+            cartaoAtual.querySelector('[data-transporte-ver]').disabled = false;
             filtros.close();
         } catch {
             erro.textContent = 'Não foi possível gerar o relatório. Confira os filtros ou tente novamente.';
         } finally {
+            gerando = false;
             gerar.disabled = false;
         }
     });
 
-    ver.addEventListener('click', () => previa.showModal());
+    function abrirPrevia(cartao) {
+        const { transportes, resumo, total } = resultados.get(cartao);
+        const porEtapas = cartao.dataset.transporte === 'etapas';
+        const porPedidos = cartao.dataset.transporte === 'pedidos';
+        const porNfe = cartao.dataset.transporte === 'nfe';
+        const tipo = cartao.dataset.transporte;
+        const selecao = selecoes[tipo];
+        previa.querySelector('[data-colunas-motorista]').hidden = !selecao;
+        previa.querySelector('[data-colunas-transportes]').hidden = porEtapas || porPedidos || porNfe || Boolean(selecao);
+        previa.querySelector('[data-colunas-etapas]').hidden = !porEtapas;
+        previa.querySelector('[data-colunas-pedidos]').hidden = !porPedidos;
+        previa.querySelector('[data-colunas-nfe]').hidden = !porNfe;
+        const linhas = document.getElementById('transporte-linhas');
+        linhas.replaceChildren();
+        for (const transporte of transportes) {
+            const status = [...campos.status.options].find(opcao => opcao.value === transporte.status);
+            const linha = linhas.insertRow();
+            const valores = porNfe
+                ? [transporte.id, transporte.numero, transporte.serie]
+                : porPedidos
+                ? [transporte.id, transporte.numero, transporte.serie,
+                    transporte.dataEmissao?.split('-').reverse().join('/')]
+                : selecao
+                ? [transporte.id, transporte.transporteId, transporte.observacoes, transporte.criadoEm,
+                    status?.text ?? transporte.status]
+                : porEtapas
+                ? [transporte.id, transporte.observacoes, transporte.criadoEm, transporte.atualizadoEm]
+                : [transporte.id, transporte.lti, transporte.cliente, transporte.criadoEm,
+                    transporte.origem, transporte.destino, transporte.peso, status?.text ?? transporte.status];
+            for (const valor of valores) {
+                linha.insertCell().textContent = valor ?? '—';
+            }
+        }
+        document.getElementById('transporte-quantidade').textContent = total;
+        document.getElementById('transporte-resumo').textContent = resumo;
+        document.getElementById('transporte-aviso-impressao').textContent = '';
+        previa.querySelector('h2').textContent = cartao.querySelector('h3').textContent;
+        previa.showModal();
+    }
+
+    for (const cartao of document.querySelectorAll('[data-transporte]')) {
+        cartao.querySelector('[data-transporte-gerar]').addEventListener('click', () => abrirFiltros(cartao));
+        cartao.querySelector('[data-transporte-ver]').addEventListener('click', () => abrirPrevia(cartao));
+    }
     document.getElementById('transporte-imprimir').addEventListener('click', () => {
         const janela = window.open('', '_blank');
         const aviso = document.getElementById('transporte-aviso-impressao');
@@ -106,7 +224,7 @@
             return;
         }
         janela.opener = null;
-        janela.document.title = 'Transportes por cliente';
+        janela.document.title = previa.querySelector('h2').textContent;
         janela.document.documentElement.lang = 'pt-BR';
         const estilo = janela.document.createElement('style');
         estilo.textContent = '@page{size:A4 landscape;margin:14mm}body{font:14px Arial;color:#111}' +

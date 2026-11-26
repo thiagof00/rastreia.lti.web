@@ -2,8 +2,21 @@
     <dialog id="transporte-filtros" class="transporte-dialog" aria-labelledby="transporte-filtros-titulo">
         <form id="transporte-form" th:action="@{/relatorios/transportes-por-cliente}">
             <h2 id="transporte-filtros-titulo">Transportes por cliente</h2>
-            <p>O período considera a data de criação do transporte.</p>
+            <p data-explicacao-periodo>O período considera a data de criação do transporte.</p>
+            <label class="field transporte-campo-rota" hidden>
+                <span>ID do transporte</span>
+                <input type="text" name="transporteId" inputmode="numeric" pattern="[1-9][0-9]*" maxlength="19" disabled>
+            </label>
             <div class="fields-grid">
+                <label class="field" hidden>Motorista
+                    <select name="motoristaId" disabled><option value="">Selecione um motorista</option></select>
+                </label>
+                <label class="field" hidden>Caminhão
+                    <select name="caminhaoId" disabled><option value="">Selecione um caminhão</option></select>
+                </label>
+                <label class="field" hidden>Carreta
+                    <select name="carretaId" disabled><option value="">Selecione uma carreta</option></select>
+                </label>
                 <label class="field">Cliente
                     <select name="cliente"><option value="">Todos os clientes</option></select>
                 </label>
@@ -26,8 +39,14 @@
                         <option value="cancelado">Cancelado</option>
                     </select>
                 </label>
-                <label class="field input-wrap">Origem <input name="origem" maxlength="100"></label>
-                <label class="field input-wrap">Destino <input name="destino" maxlength="100"></label>
+                <label class="field transporte-campo-rota">
+                    <span>Origem</span>
+                    <input type="text" name="origem" maxlength="100">
+                </label>
+                <label class="field transporte-campo-rota">
+                    <span>Destino</span>
+                    <input type="text" name="destino" maxlength="100">
+                </label>
             </div>
             <p id="transporte-erro" role="alert"></p>
             <div class="form-footer-right">
@@ -42,9 +61,17 @@
             <p id="transporte-resumo"></p>
             <p id="transporte-quantidade"></p>
             <table>
-                <thead><tr>
+                <thead><tr data-colunas-transportes>
                     <th>ID</th><th>Código LTI</th><th>Cliente</th><th>Criado em</th>
                     <th>Origem</th><th>Destino</th><th>Peso total</th><th>Status</th>
+                </tr><tr data-colunas-etapas hidden>
+                    <th>ID da etapa</th><th>Observações</th><th>Criada em</th><th>Atualizada em</th>
+                </tr><tr data-colunas-motorista hidden>
+                    <th>ID da etapa</th><th>ID do transporte</th><th>Observações</th><th>Criada em</th><th>Status atual do transporte</th>
+                </tr><tr data-colunas-pedidos hidden>
+                    <th>ID do pedido</th><th>Número</th><th>Série</th><th>Data de emissão</th>
+                </tr><tr data-colunas-nfe hidden>
+                    <th>ID da NF-e</th><th>Número</th><th>Série</th>
                 </tr></thead>
                 <tbody id="transporte-linhas"></tbody>
             </table>
@@ -70,6 +97,18 @@
         .transporte-dialog::backdrop { background: rgb(0 0 0 / 55%); }
         .transporte-dialog h2, .transporte-dialog p, .transporte-dialog table { margin-bottom: 14px; }
         .transporte-dialog [hidden] { display: none; }
+        #transporte-filtros .transporte-campo-rota {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .transporte-dialog .form-footer-right {
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .transporte-dialog .form-footer-right .btn-primary {
+            width: auto;
+        }
         .transporte-previa { width: min(1150px, 94vw); }
         .transporte-previa th { position: static; }
     </style>
