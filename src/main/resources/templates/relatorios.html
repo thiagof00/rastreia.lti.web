@@ -225,7 +225,7 @@
                         </div>
                     </div>
 
-                    <div class="rel-card" data-type="op" data-name="Invoices vinculadas a transportes">
+                    <div class="rel-card" data-transporte="invoices" data-type="op" data-name="Invoices vinculadas a transportes">
                         <div class="rel-card-head">
                             <div class="rel-icon"><i class="ti ti-currency-dollar"></i></div>
                             <span class="rel-badge op">Operacional</span>
@@ -233,36 +233,26 @@
                         <h3>Invoices vinculadas a transportes</h3>
                         <p>Invoices associadas aos transportes, com número e vínculo operacional.</p>
                         <div class="rel-tables"><code>transporte_invoice</code><code>invoice</code></div>
+                        <span data-transporte-total role="status"></span>
                         <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary"
-                                onclick="relGerar('Invoices vinculadas a transportes')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Invoices vinculadas a transportes')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
                         </div>
                     </div>
 
-                    <div class="rel-card" data-type="op" data-name="Combinação caminhão carreta">
+                    <div class="rel-card" data-transporte="combinacoes" data-type="op" data-name="Combinação caminhão carreta">
                         <div class="rel-card-head">
                             <div class="rel-icon"><i class="ti ti-link"></i></div>
                             <span class="rel-badge op">Operacional</span>
                         </div>
                         <h3>Combinações caminhão × carreta</h3>
-                        <p>Vínculos entre caminhões e carretas cadastrados na operação.</p>
-                        <div class="rel-tables"><code>caminhao_carreta</code><code>caminhoes</code><code>carretas</code>
+                        <p>Pares de caminhão e carreta registrados juntos nas etapas de transporte.</p>
+                        <div class="rel-tables"><code>etapas_transporte</code><code>caminhoes</code><code>carretas</code>
                         </div>
+                        <span data-transporte-total role="status"></span>
                         <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary"
-                                onclick="relGerar('Combinações caminhão x carreta')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Combinações caminhão x carreta')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
                         </div>
                     </div>
 
@@ -274,18 +264,10 @@
                         <h3>Timeline / andamento do transporte</h3>
                         <p>Linha do tempo das etapas, com datas e observações operacionais.</p>
                         <div class="rel-tables"><code>etapas_transporte</code><code>transportes</code></div>
-                        <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary" onclick="relGerar('Timeline do transporte')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Timeline do transporte')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
-                        </div>
+                        <p>Visualização a definir.</p>
                     </div>
 
-                    <div class="rel-card" data-type="op" data-name="Documentação por transporte">
+                    <div class="rel-card" data-transporte="documentacao" data-type="op" data-name="Documentação por transporte">
                         <div class="rel-card-head">
                             <div class="rel-icon"><i class="ti ti-paperclip"></i></div>
                             <span class="rel-badge op">Operacional</span>
@@ -295,15 +277,10 @@
                         <div class="rel-tables">
                             <code>transportes</code><code>pedido</code><code>nfe</code><code>invoice</code>
                         </div>
+                        <span data-transporte-total role="status"></span>
                         <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary"
-                                onclick="relGerar('Documentação por transporte')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Documentação por transporte')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
                         </div>
                     </div>
 
@@ -318,16 +295,7 @@
                         <div class="rel-tables">
                             <code>motoristas</code><code>etapas_transporte</code><code>transportes</code>
                         </div>
-                        <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary"
-                                onclick="relGerar('Produtividade por motorista')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Produtividade por motorista')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
-                        </div>
+                        <p>Visualização a definir.</p>
                     </div>
 
                     <div class="rel-card" data-type="ger" data-name="Utilização da frota">
@@ -340,33 +308,21 @@
                         <div class="rel-tables">
                             <code>caminhoes</code><code>carretas</code><code>etapas_transporte</code>
                         </div>
-                        <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary" onclick="relGerar('Utilização da frota')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Utilização da frota')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
-                        </div>
+                        <p>Visualização a definir.</p>
                     </div>
 
-                    <div class="rel-card" data-type="ger" data-name="Peso total transportado por cliente">
+                    <div class="rel-card" data-transporte="peso" data-type="ger" data-name="Peso total transportado por cliente">
                         <div class="rel-card-head">
                             <div class="rel-icon green"><i class="ti ti-scale"></i></div>
                             <span class="rel-badge ger">Gerencial</span>
                         </div>
                         <h3>Peso total transportado por cliente/período</h3>
-                        <p>Soma de peso_total dos transportes agrupada por cliente e período.</p>
+                        <p>Peso total dos transportes entregues, por cliente e mês de criação.</p>
                         <div class="rel-tables"><code>transportes</code><code>clientes</code></div>
+                        <span data-transporte-total role="status"></span>
                         <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary" onclick="relGerar('Peso total transportado')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Peso total transportado')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
                         </div>
                     </div>
 
@@ -378,76 +334,53 @@
                         <h3>Transportes por status</h3>
                         <p>Distribuição dos transportes por status, com totais e percentuais.</p>
                         <div class="rel-tables"><code>transportes</code></div>
-                        <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary" onclick="relGerar('Transportes por status')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Transportes por status')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
-                        </div>
+                        <p>Visualização a definir.</p>
                     </div>
 
-                    <div class="rel-card" data-type="ger" data-name="Documentos pendentes por transporte">
+                    <div class="rel-card" data-transporte="pendencias" data-type="ger" data-name="Documentos pendentes por transporte">
                         <div class="rel-card-head">
                             <div class="rel-icon amber"><i class="ti ti-alert-triangle"></i></div>
                             <span class="rel-badge ger">Gerencial</span>
                         </div>
                         <h3>Documentos pendentes por transporte</h3>
-                        <p>Identifica transportes sem pedido, NF-e ou invoice vinculados.</p>
+                        <p>Transportes não cancelados com algum tipo de documento sem vínculo cadastrado.</p>
                         <div class="rel-tables">
                             <code>transportes</code><code>transporte_pedido</code><code>transporte_nfe</code><code>transporte_invoice</code>
                         </div>
+                        <span data-transporte-total role="status"></span>
                         <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary"
-                                onclick="relGerar('Documentos pendentes por transporte')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Documentos pendentes')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
                         </div>
                     </div>
 
-                    <div class="rel-card" data-type="ger" data-name="Sessões ativas e expiradas">
+                    <div class="rel-card" data-transporte="sessoes" data-type="ger" data-name="Sessões ativas e expiradas">
                         <div class="rel-card-head">
                             <div class="rel-icon purple"><i class="ti ti-lock-access"></i></div>
                             <span class="rel-badge ger">Gerencial</span>
                         </div>
                         <h3>Sessões ativas e expiradas</h3>
-                        <p>Sessões por usuário, data de criação e expiração do token.</p>
+                        <p>Sessões ainda registradas, com horários de criação e expiração. Acesso administrativo.</p>
                         <div class="rel-tables"><code>sessoes</code><code>usuarios</code></div>
+                        <span data-transporte-total role="status"></span>
                         <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary"
-                                onclick="relGerar('Sessões ativas e expiradas')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Sessões ativas e expiradas')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
                         </div>
                     </div>
 
-                    <div class="rel-card" data-type="ger" data-name="Tentativas de falha e bloqueios">
+                    <div class="rel-card" data-transporte="bloqueios" data-type="ger" data-name="Tentativas de falha e bloqueios">
                         <div class="rel-card-head">
                             <div class="rel-icon purple"><i class="ti ti-shield-lock"></i></div>
                             <span class="rel-badge ger">Gerencial</span>
                         </div>
                         <h3>Tentativas de falha e bloqueios de acesso</h3>
-                        <p>Tentativas de falha, bloqueado_até e usuários com acesso bloqueado.</p>
+                        <p>Tentativas de login registradas e bloqueios atuais. Acesso administrativo.</p>
                         <div class="rel-tables"><code>usuarios</code><code>sessoes</code></div>
+                        <span data-transporte-total role="status"></span>
                         <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary"
-                                onclick="relGerar('Tentativas de falha e bloqueios')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Tentativas de falha e bloqueios')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
                         </div>
                     </div>
 
@@ -460,16 +393,7 @@
                         <p>Capacidade, peso máximo e metragem das carretas em uso.</p>
                         <div class="rel-tables"><code>caminhoes</code><code>carretas</code><code>caminhao_carreta</code>
                         </div>
-                        <div class="rel-card-footer">
-                            <button type="button" class="btn btn-primary"
-                                onclick="relGerar('Ocupação de caminhões e carretas')">
-                                <i class="ti ti-player-play"></i> Gerar
-                            </button>
-                            <button type="button" class="btn btn-outline"
-                                onclick="relGerar('Prévia: Ocupação de caminhões e carretas')">
-                                <i class="ti ti-eye"></i> Prévia
-                            </button>
-                        </div>
+                        <p>Visualização a definir.</p>
                     </div>
 
                 </div>
@@ -760,10 +684,6 @@
                 }
             }
 
-            function relGerar(nome) {
-                // Integração real: substituir por fetch/window.location para o endpoint do relatório
-                alert('Gerando relatório: ' + nome);
-            }
 
         </script>
 

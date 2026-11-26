@@ -6,6 +6,15 @@
     const gerar = form.querySelector('[type="submit"]');
     const campos = form.elements;
     const resultados = new Map();
+    const tabelas = {
+        invoices: 'transporte',
+        documentacao: 'transporte',
+        combinacoes: 'direta',
+        peso: 'periodo',
+        pendencias: 'periodo',
+        sessoes: 'direta',
+        bloqueios: 'direta'
+    };
     const selecoes = {
         motorista: { campo: campos.motoristaId, lista: '/motoristas', consulta: '/etapas-motorista' },
         caminhao: { campo: campos.caminhaoId, lista: '/caminhoes', consulta: '/etapas-caminhao' },
@@ -24,8 +33,10 @@
         }
         cartaoAtual = cartao;
         const porCliente = cartao.dataset.transporte === 'cliente';
-        const porEtapas = ['etapas', 'pedidos', 'nfe'].includes(cartao.dataset.transporte);
         const tipo = cartao.dataset.transporte;
+        const tabela = tabelas[tipo];
+        const porEtapas = ['etapas', 'pedidos', 'nfe'].includes(tipo) || tabela === 'transporte';
+        const consultaDireta = tabela === 'direta';
         const selecao = selecoes[tipo];
         for (const [chave, { campo }] of Object.entries(selecoes)) {
             const visivel = chave === tipo;
@@ -33,24 +44,28 @@
             campo.disabled = !visivel;
             campo.required = visivel;
         }
-        campos.periodo.querySelector('[value="mes"]').hidden = Boolean(selecao);
+        campos.periodo.querySelector('[value="mes"]').hidden = Boolean(selecao) || tabela === 'periodo';
         for (const nome of ['status', 'origem', 'destino']) {
-            campos[nome].closest('label').hidden = Boolean(selecao);
+            campos[nome].closest('label').hidden = Boolean(selecao || tabela);
         }
         form.querySelector('[data-explicacao-periodo]').textContent = selecao
             ? 'O período considera a data de criação da etapa.'
             : 'O período considera a data de criação do transporte.';
-        form.querySelector('.fields-grid').hidden = porEtapas;
-        form.querySelector('[data-explicacao-periodo]').hidden = porEtapas;
+        form.querySelector('.fields-grid').hidden = porEtapas || consultaDireta;
+        form.querySelector('[data-explicacao-periodo]').hidden = porEtapas || consultaDireta;
         campos.transporteId.closest('label').hidden = !porEtapas;
         campos.transporteId.disabled = !porEtapas;
         campos.transporteId.required = porEtapas;
-        gerar.textContent = porEtapas || selecao ? 'Consultar' : 'Gerar relatório';
+        gerar.textContent = porEtapas || selecao || tabela ? 'Consultar' : 'Gerar relatório';
         campos.cliente.disabled = !porCliente;
         campos.cliente.closest('label').hidden = !porCliente;
         gerar.disabled = (porCliente && !clientesCarregados) || (selecao && !selecao.campo.dataset.carregado);
         filtros.querySelector('h2').textContent = cartao.querySelector('h3').textContent;
         erro.textContent = '';
+        if (consultaDireta) {
+            form.requestSubmit();
+            return;
+        }
         filtros.showModal();
         if (selecao && !selecao.campo.dataset.carregado) {
             try {
@@ -108,9 +123,11 @@
         erro.textContent = '';
         const dados = new FormData(form);
         const tipo = cartaoAtual.dataset.transporte;
+        const tabela = tabelas[tipo];
+        const consultaDireta = tabela === 'direta';
         const porPedidos = tipo === 'pedidos';
         const porNfe = tipo === 'nfe';
-        const porEtapas = tipo === 'etapas' || porPedidos || porNfe;
+        const porEtapas = tipo === 'etapas' || porPedidos || porNfe || tabela === 'transporte';
         const selecao = selecoes[cartaoAtual.dataset.transporte];
         const dataBr = valor => valor.split('-').reverse().join('/');
         if (dados.get('periodo') === 'intervalo' && dados.get('fim') < dados.get('inicio')) {
@@ -122,7 +139,8 @@
             mes: dados.get('mes') ? dataBr(dados.get('mes')) : '',
             intervalo: dados.get('inicio') ? dataBr(dados.get('inicio')) + ' a ' + dataBr(dados.get('fim')) : ''
         }[dados.get('periodo')];
-        const resumo = porEtapas ? 'Transporte #' + dados.get('transporteId') : selecao
+        const resumo = porEtapas ? 'Transporte #' + dados.get('transporteId')
+            : tabela ? (tabela === 'periodo' ? periodo : '') : selecao
             ? selecao.campo.selectedOptions[0].text + ' · ' + periodo : [
             dados.has('cliente') ? campos.cliente.selectedOptions[0].text : '',
             periodo,
@@ -133,6 +151,8 @@
 
         gerando = true;
         gerar.disabled = true;
+        const mensagemCartao = cartaoAtual.querySelector('[data-transporte-total]');
+        if (consultaDireta) mensagemCartao.textContent = 'Consultando…';
         try {
             let url = porEtapas
                 ? form.action + '/' + tipo + '?' + new URLSearchParams({ transporteId: dados.get('transporteId') })
@@ -145,26 +165,47 @@
                 }
                 url = form.action + selecao.consulta + '?' + parametros;
             }
+            if (tabela) {
+                const parametros = new URLSearchParams();
+                if (tabela === 'transporte') parametros.set('transporteId', dados.get('transporteId'));
+                if (tabela === 'periodo' && dados.get('periodo') === 'intervalo') {
+                    parametros.set('inicio', dados.get('inicio'));
+                    parametros.set('fim', dados.get('fim'));
+                }
+                url = form.action + '/tabelas/' + tipo + '?' + parametros;
+            }
             const resposta = await fetch(url);
+            if (resposta.status === 403) {
+                (consultaDireta ? mensagemCartao : erro).textContent = 'Seu perfil não tem permissão para esta consulta.';
+                return;
+            }
             if (porEtapas && resposta.status === 404) {
                 erro.textContent = 'Transporte não encontrado. Confira o ID informado.';
                 return;
             }
             if (!resposta.ok) throw new Error();
-            const transportes = await resposta.json();
-            const total = porNfe
+            const payload = await resposta.json();
+            const transportes = tabela ? payload.linhas : payload;
+            const total = tabela
+                ? (transportes.length ? transportes.length + ' registro(s) encontrado(s)' : 'Nenhum registro encontrado')
+                : porNfe
                 ? (transportes.length ? transportes.length + ' NF-e vinculada(s)' : 'Nenhuma NF-e vinculada')
                 : porPedidos
                 ? (transportes.length ? transportes.length + ' pedido(s) encontrado(s)' : 'Nenhum pedido vinculado')
                 : porEtapas || selecao
                 ? (transportes.length ? transportes.length + ' etapa(s) encontrada(s)' : 'Nenhuma etapa encontrada')
                 : (transportes.length ? transportes.length + ' transporte(s) encontrado(s)' : 'Nenhum transporte encontrado');
-            resultados.set(cartaoAtual, { transportes, resumo, total });
-            cartaoAtual.querySelector('[data-transporte-total]').textContent = total;
+            resultados.set(cartaoAtual, { transportes, resumo, total, colunas: tabela ? payload.colunas : null });
+            mensagemCartao.textContent = total;
             cartaoAtual.querySelector('[data-transporte-ver]').disabled = false;
-            filtros.close();
+            if (consultaDireta) {
+                abrirPrevia(cartaoAtual);
+            } else {
+                filtros.close();
+            }
         } catch {
-            erro.textContent = 'Não foi possível gerar o relatório. Confira os filtros ou tente novamente.';
+            (consultaDireta ? mensagemCartao : erro).textContent =
+                'Não foi possível concluir a consulta. Tente novamente.';
         } finally {
             gerando = false;
             gerar.disabled = false;
@@ -172,23 +213,33 @@
     });
 
     function abrirPrevia(cartao) {
-        const { transportes, resumo, total } = resultados.get(cartao);
+        const { transportes, resumo, total, colunas } = resultados.get(cartao);
         const porEtapas = cartao.dataset.transporte === 'etapas';
         const porPedidos = cartao.dataset.transporte === 'pedidos';
         const porNfe = cartao.dataset.transporte === 'nfe';
         const tipo = cartao.dataset.transporte;
         const selecao = selecoes[tipo];
         previa.querySelector('[data-colunas-motorista]').hidden = !selecao;
-        previa.querySelector('[data-colunas-transportes]').hidden = porEtapas || porPedidos || porNfe || Boolean(selecao);
+        previa.querySelector('[data-colunas-transportes]').hidden =
+            porEtapas || porPedidos || porNfe || Boolean(selecao || colunas);
         previa.querySelector('[data-colunas-etapas]').hidden = !porEtapas;
         previa.querySelector('[data-colunas-pedidos]').hidden = !porPedidos;
         previa.querySelector('[data-colunas-nfe]').hidden = !porNfe;
+        const cabecalho = previa.querySelector('[data-colunas-tabela]');
+        cabecalho.hidden = !colunas;
+        cabecalho.replaceChildren();
+        for (const coluna of colunas ?? []) {
+            const celula = document.createElement('th');
+            celula.scope = 'col';
+            celula.textContent = coluna;
+            cabecalho.append(celula);
+        }
         const linhas = document.getElementById('transporte-linhas');
         linhas.replaceChildren();
         for (const transporte of transportes) {
             const status = [...campos.status.options].find(opcao => opcao.value === transporte.status);
             const linha = linhas.insertRow();
-            const valores = porNfe
+            const valores = colunas ? transporte : porNfe
                 ? [transporte.id, transporte.numero, transporte.serie]
                 : porPedidos
                 ? [transporte.id, transporte.numero, transporte.serie,
