@@ -256,15 +256,19 @@
                         </div>
                     </div>
 
-                    <div class="rel-card" data-type="op" data-name="Timeline andamento transporte">
+                    <div class="rel-card" data-transporte="timeline" data-type="op" data-name="Timeline andamento transporte">
                         <div class="rel-card-head">
                             <div class="rel-icon"><i class="ti ti-timeline"></i></div>
                             <span class="rel-badge op">Operacional</span>
                         </div>
                         <h3>Timeline / andamento do transporte</h3>
-                        <p>Linha do tempo das etapas, com datas e observações operacionais.</p>
+                        <p>Histórico cronológico das etapas, com observações e responsáveis.</p>
                         <div class="rel-tables"><code>etapas_transporte</code><code>transportes</code></div>
-                        <p>Visualização a definir.</p>
+                        <span data-transporte-total role="status"></span>
+                        <div class="rel-card-footer">
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Ver linha do tempo</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
+                        </div>
                     </div>
 
                     <div class="rel-card" data-transporte="documentacao" data-type="op" data-name="Documentação por transporte">
@@ -285,30 +289,38 @@
                     </div>
 
                     <!-- GERENCIAIS -->
-                    <div class="rel-card" data-type="ger" data-name="Produtividade por motorista">
+                    <div class="rel-card" data-transporte="produtividade" data-type="ger" data-name="Produtividade por motorista">
                         <div class="rel-card-head">
                             <div class="rel-icon green"><i class="ti ti-chart-bar"></i></div>
                             <span class="rel-badge ger">Gerencial</span>
                         </div>
                         <h3>Produtividade por motorista</h3>
-                        <p>Quantidade de etapas/transportes por motorista, com filtro por período e status.</p>
+                        <p>Etapas registradas e transportes distintos por motorista, com filtro por período.</p>
                         <div class="rel-tables">
                             <code>motoristas</code><code>etapas_transporte</code><code>transportes</code>
                         </div>
-                        <p>Visualização a definir.</p>
+                        <span data-transporte-total role="status"></span>
+                        <div class="rel-card-footer">
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
+                        </div>
                     </div>
 
-                    <div class="rel-card" data-type="ger" data-name="Utilização da frota">
+                    <div class="rel-card" data-transporte="utilizacao" data-type="ger" data-name="Utilização da frota">
                         <div class="rel-card-head">
                             <div class="rel-icon green"><i class="ti ti-truck-delivery"></i></div>
                             <span class="rel-badge ger">Gerencial</span>
                         </div>
                         <h3>Utilização da frota</h3>
-                        <p>Indicadores de uso de caminhões e carretas por período e status operacional.</p>
+                        <p>Etapas e transportes distintos por veículo, com filtro por período.</p>
                         <div class="rel-tables">
                             <code>caminhoes</code><code>carretas</code><code>etapas_transporte</code>
                         </div>
-                        <p>Visualização a definir.</p>
+                        <span data-transporte-total role="status"></span>
+                        <div class="rel-card-footer">
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
+                        </div>
                     </div>
 
                     <div class="rel-card" data-transporte="peso" data-type="ger" data-name="Peso total transportado por cliente">
@@ -326,7 +338,7 @@
                         </div>
                     </div>
 
-                    <div class="rel-card" data-type="ger" data-name="Transportes por status">
+                    <div class="rel-card" data-transporte="status" data-type="ger" data-name="Transportes por status">
                         <div class="rel-card-head">
                             <div class="rel-icon amber"><i class="ti ti-chart-pie"></i></div>
                             <span class="rel-badge ger">Gerencial</span>
@@ -334,7 +346,11 @@
                         <h3>Transportes por status</h3>
                         <p>Distribuição dos transportes por status, com totais e percentuais.</p>
                         <div class="rel-tables"><code>transportes</code></div>
-                        <p>Visualização a definir.</p>
+                        <span data-transporte-total role="status"></span>
+                        <div class="rel-card-footer">
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Consultar</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
+                        </div>
                     </div>
 
                     <div class="rel-card" data-transporte="pendencias" data-type="ger" data-name="Documentos pendentes por transporte">
@@ -384,16 +400,20 @@
                         </div>
                     </div>
 
-                    <div class="rel-card" data-type="ger" data-name="Ocupação de caminhões e carretas">
+                    <div class="rel-card" data-transporte="ocupacao" data-type="ger" data-name="Ocupação de caminhões e carretas">
                         <div class="rel-card-head">
                             <div class="rel-icon green"><i class="ti ti-box"></i></div>
                             <span class="rel-badge ger">Gerencial</span>
                         </div>
                         <h3>Ocupação de caminhões e carretas</h3>
-                        <p>Capacidade, peso máximo e metragem das carretas em uso.</p>
+                        <p>Peso da carga e capacidade da carreta na última etapa de cada transporte em andamento.</p>
                         <div class="rel-tables"><code>caminhoes</code><code>carretas</code><code>caminhao_carreta</code>
                         </div>
-                        <p>Visualização a definir.</p>
+                        <span data-transporte-total role="status"></span>
+                        <div class="rel-card-footer">
+                            <button type="button" class="btn btn-primary" data-transporte-gerar>Ver ocupação</button>
+                            <button type="button" class="btn btn-outline" data-transporte-ver disabled>Prévia</button>
+                        </div>
                     </div>
 
                 </div>

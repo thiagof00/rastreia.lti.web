@@ -60,6 +60,7 @@
             <h2 id="transporte-previa-titulo">Transportes por cliente</h2>
             <p id="transporte-resumo"></p>
             <p id="transporte-quantidade"></p>
+            <div id="transporte-visualizacao"></div>
             <table>
                 <thead><tr data-colunas-transportes>
                     <th>ID</th><th>Código LTI</th><th>Cliente</th><th>Criado em</th>
@@ -111,5 +112,22 @@
         }
         .transporte-previa { width: min(1150px, 94vw); }
         .transporte-previa th { position: static; }
+        #transporte-visualizacao:not(:empty) { margin-block-end: 20px; }
+        .transporte-timeline {
+            padding-inline-start: 22px;
+            border-inline-start: 2px solid var(--purple-500);
+        }
+        .transporte-timeline li { margin-block-end: 12px; }
+        .transporte-timeline li p { margin: 4px 0; }
+        .transporte-pizza {
+            width: min(190px, 100%);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            margin-block: 10px;
+        }
+        .transporte-legenda, .transporte-barras { list-style: none; padding: 0; }
+        .transporte-legenda li { padding-inline-start: 8px; border-inline-start: 6px solid; margin-block: 6px; }
+        .transporte-barras li { display: grid; gap: 4px; margin-block: 8px; }
+        .transporte-barras progress { width: min(100%, 520px); accent-color: var(--purple-500); }
     </style>
 </th:block>

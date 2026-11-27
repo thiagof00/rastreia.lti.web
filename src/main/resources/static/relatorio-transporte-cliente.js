@@ -13,7 +13,12 @@
         peso: 'periodo',
         pendencias: 'periodo',
         sessoes: 'direta',
-        bloqueios: 'direta'
+        bloqueios: 'direta',
+        timeline: 'transporte',
+        produtividade: 'periodo',
+        utilizacao: 'periodo',
+        status: 'periodo',
+        ocupacao: 'direta'
     };
     const selecoes = {
         motorista: { campo: campos.motoristaId, lista: '/motoristas', consulta: '/etapas-motorista' },
@@ -48,7 +53,7 @@
         for (const nome of ['status', 'origem', 'destino']) {
             campos[nome].closest('label').hidden = Boolean(selecao || tabela);
         }
-        form.querySelector('[data-explicacao-periodo]').textContent = selecao
+        form.querySelector('[data-explicacao-periodo]').textContent = selecao || ['produtividade', 'utilizacao'].includes(tipo)
             ? 'O período considera a data de criação da etapa.'
             : 'O período considera a data de criação do transporte.';
         form.querySelector('.fields-grid').hidden = porEtapas || consultaDireta;
@@ -198,10 +203,9 @@
             resultados.set(cartaoAtual, { transportes, resumo, total, colunas: tabela ? payload.colunas : null });
             mensagemCartao.textContent = total;
             cartaoAtual.querySelector('[data-transporte-ver]').disabled = false;
-            if (consultaDireta) {
+            if (!consultaDireta) filtros.close();
+            if (consultaDireta || ['timeline', 'produtividade', 'utilizacao', 'status'].includes(tipo)) {
                 abrirPrevia(cartaoAtual);
-            } else {
-                filtros.close();
             }
         } catch {
             (consultaDireta ? mensagemCartao : erro).textContent =
@@ -256,10 +260,91 @@
             }
         }
         document.getElementById('transporte-quantidade').textContent = total;
+        renderizarVisualizacao(tipo, transportes);
         document.getElementById('transporte-resumo').textContent = resumo;
         document.getElementById('transporte-aviso-impressao').textContent = '';
         previa.querySelector('h2').textContent = cartao.querySelector('h3').textContent;
         previa.showModal();
+    }
+
+    function renderizarVisualizacao(tipo, registros) {
+        const area = document.getElementById('transporte-visualizacao');
+        area.replaceChildren();
+        if (!registros.length) return;
+
+        if (tipo === 'timeline') {
+            const lista = document.createElement('ol');
+            lista.className = 'transporte-timeline';
+            for (const [data, observacoes, motorista, caminhao, carreta] of registros) {
+                const etapa = document.createElement('li');
+                const titulo = document.createElement('strong');
+                titulo.textContent = data ?? 'Data indisponível';
+                const texto = document.createElement('p');
+                texto.textContent = observacoes || 'Sem observações';
+                const detalhes = document.createElement('small');
+                detalhes.textContent = [
+                    motorista && 'Motorista: ' + motorista,
+                    caminhao && 'Caminhão: ' + caminhao,
+                    carreta && 'Carreta: ' + carreta
+                ].filter(Boolean).join(' · ');
+                etapa.append(titulo, texto, detalhes);
+                lista.append(etapa);
+            }
+            area.append(lista);
+            return;
+        }
+
+        const numero = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1 });
+        if (tipo === 'status') {
+            const cores = ['#526fe5', '#087f72', '#b65416', '#a63878'];
+            const total = registros.reduce((soma, [, quantidade]) => soma + Number(quantidade), 0);
+            if (total === 0) return;
+            const legenda = document.createElement('ul');
+            legenda.className = 'transporte-legenda';
+            const setores = [];
+            let inicio = 0;
+            registros.forEach(([status, quantidade], indice) => {
+                const percentual = Number(quantidade) / total * 100;
+                const cor = cores[indice % cores.length];
+                setores.push(cor + ' ' + inicio + '% ' + (inicio + percentual) + '%');
+                inicio += percentual;
+                const item = document.createElement('li');
+                item.style.borderInlineStartColor = cor;
+                const nome = [...campos.status.options].find(opcao => opcao.value === status)?.text ?? status;
+                item.textContent = nome + ' · ' + numero.format(quantidade) + ' (' + numero.format(percentual) + '%)';
+                legenda.append(item);
+            });
+            const pizza = document.createElement('div');
+            pizza.className = 'transporte-pizza';
+            pizza.style.backgroundImage = 'conic-gradient(' + setores.join(', ') + ')';
+            pizza.setAttribute('aria-hidden', 'true');
+            area.append(pizza, legenda);
+            return;
+        }
+
+        if (tipo !== 'produtividade' && tipo !== 'utilizacao') return;
+        const porMotorista = tipo === 'produtividade';
+        const indiceEtapas = porMotorista ? 1 : 2;
+        const maiores = registros.slice(0, 10);
+        const maximo = Math.max(1, ...maiores.map(linha => Number(linha[indiceEtapas])));
+        const titulo = document.createElement('h3');
+        titulo.textContent = 'Etapas registradas · até 10 maiores contagens';
+        const lista = document.createElement('ol');
+        lista.className = 'transporte-barras';
+        for (const linha of maiores) {
+            const item = document.createElement('li');
+            const rotulo = document.createElement('span');
+            const etapas = Number(linha[indiceEtapas]);
+            const nome = porMotorista ? linha[0] : linha[0] + ' · ' + linha[1];
+            rotulo.textContent = nome + ' · ' + numero.format(etapas);
+            const barra = document.createElement('progress');
+            barra.max = maximo;
+            barra.value = etapas;
+            barra.setAttribute('aria-hidden', 'true');
+            item.append(rotulo, barra);
+            lista.append(item);
+        }
+        area.append(titulo, lista);
     }
 
     for (const cartao of document.querySelectorAll('[data-transporte]')) {
@@ -283,6 +368,7 @@
             'thead{display:table-header-group}tr{break-inside:avoid}';
         janela.document.head.append(estilo);
         janela.document.body.append(janela.document.importNode(document.getElementById('transporte-impressao'), true));
+        janela.document.getElementById('transporte-visualizacao').remove();
         janela.focus();
         janela.print();
     });
