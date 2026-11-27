@@ -273,6 +273,8 @@
         if (!registros.length) return;
 
         if (tipo === 'timeline') {
+            const painel = document.createElement('div');
+            painel.className = 'transporte-timeline-painel';
             const lista = document.createElement('ol');
             lista.className = 'transporte-timeline';
             for (const [data, observacoes, motorista, caminhao, carreta] of registros) {
@@ -290,7 +292,8 @@
                 etapa.append(titulo, texto, detalhes);
                 lista.append(etapa);
             }
-            area.append(lista);
+            painel.append(lista, criarGraficoTimeline(registros));
+            area.append(painel);
             return;
         }
 
@@ -322,9 +325,12 @@
             return;
         }
 
-        if (tipo !== 'produtividade' && tipo !== 'utilizacao') return;
-        const porMotorista = tipo === 'produtividade';
-        const indiceEtapas = porMotorista ? 1 : 2;
+        if (tipo === 'produtividade') {
+            renderizarProdutividade(area, registros, numero);
+            return;
+        }
+        if (tipo !== 'utilizacao') return;
+        const indiceEtapas = 2;
         const maiores = registros.slice(0, 10);
         const maximo = Math.max(1, ...maiores.map(linha => Number(linha[indiceEtapas])));
         const titulo = document.createElement('h3');
@@ -335,7 +341,7 @@
             const item = document.createElement('li');
             const rotulo = document.createElement('span');
             const etapas = Number(linha[indiceEtapas]);
-            const nome = porMotorista ? linha[0] : linha[0] + ' · ' + linha[1];
+            const nome = linha[0] + ' · ' + linha[1];
             rotulo.textContent = nome + ' · ' + numero.format(etapas);
             const barra = document.createElement('progress');
             barra.max = maximo;
@@ -345,6 +351,110 @@
             lista.append(item);
         }
         area.append(titulo, lista);
+    }
+
+    function criarGraficoTimeline(registros) {
+        const figura = document.createElement('figure');
+        figura.className = 'transporte-timeline-grafico';
+        const titulo = document.createElement('figcaption');
+        titulo.textContent = 'Etapas ao longo do tempo';
+        figura.append(titulo);
+
+        const pontos = registros.flatMap(([data, observacao], indice) => {
+            const partes = data?.match(/^(\d{2})\/(\d{2})\/(\d{4}) (\d{2}):(\d{2})$/);
+            if (!partes) return [];
+            const [, dia, mes, ano, hora, minuto] = partes;
+            return [{ data, observacao, etapa: indice + 1, instante: Date.UTC(ano, mes - 1, dia, hora, minuto) }];
+        });
+        if (!pontos.length) {
+            figura.append('Nenhuma etapa com data disponível.');
+            return figura;
+        }
+
+        const namespace = 'http://www.w3.org/2000/svg';
+        const svg = document.createElementNS(namespace, 'svg');
+        svg.setAttribute('viewBox', '0 0 520 230');
+        svg.setAttribute('role', 'img');
+        svg.setAttribute('aria-label', 'Gráfico de linha com data e hora no eixo horizontal e número da etapa no eixo vertical');
+        const desenho = (tipo, atributos, texto) => {
+            const elemento = document.createElementNS(namespace, tipo);
+            for (const [nome, valor] of Object.entries(atributos)) elemento.setAttribute(nome, valor);
+            if (texto) elemento.textContent = texto;
+            svg.append(elemento);
+            return elemento;
+        };
+        const primeiro = pontos[0];
+        const ultimo = pontos.at(-1);
+        const duracao = ultimo.instante - primeiro.instante;
+        const coordenadas = pontos.map(ponto => ({
+            ...ponto,
+            x: duracao ? 56 + (ponto.instante - primeiro.instante) / duracao * 430 : 271,
+            y: 168 - (ponto.etapa - 1) / Math.max(1, registros.length - 1) * 135
+        }));
+
+        desenho('path', { d: 'M 48 24 V 178 H 494', class: 'timeline-eixos' });
+        desenho('text', { x: 48, y: 15 }, 'Etapa');
+        desenho('text', { x: 39, y: 172, 'text-anchor': 'end' }, '1');
+        if (registros.length > 1) {
+            desenho('text', { x: 39, y: 37, 'text-anchor': 'end' }, String(registros.length));
+        }
+        desenho('text', { x: 56, y: 198 }, primeiro.data);
+        if (duracao) desenho('text', { x: 486, y: 198, 'text-anchor': 'end' }, ultimo.data);
+        desenho('text', { x: 271, y: 223, 'text-anchor': 'middle' }, 'Data e hora');
+        desenho('polyline', {
+            points: coordenadas.map(({ x, y }) => x + ',' + y).join(' '),
+            class: 'timeline-trajeto'
+        });
+        for (const ponto of coordenadas) {
+            const circulo = desenho('circle', { cx: ponto.x, cy: ponto.y, r: 5, class: 'timeline-ponto' });
+            const detalhe = document.createElementNS(namespace, 'title');
+            detalhe.textContent = 'Etapa ' + ponto.etapa + ' · ' + ponto.data
+                + (ponto.observacao ? ' · ' + ponto.observacao : '');
+            circulo.append(detalhe);
+        }
+        figura.append(svg);
+        return figura;
+    }
+
+    function renderizarProdutividade(area, registros, numero) {
+        const maiores = registros.slice(0, 10);
+        const escala = Math.max(1, ...maiores.flatMap(([, etapas, transportes]) =>
+            [Number(etapas), Number(transportes)]));
+        const grafico = document.createElement('section');
+        grafico.className = 'grafico-produtividade';
+        const titulo = document.createElement('h3');
+        titulo.textContent = registros.length > 10
+            ? 'Etapas e transportes distintos · 10 motoristas com mais etapas'
+            : 'Etapas e transportes distintos';
+        grafico.append(titulo);
+
+        for (const [motorista, etapas, transportes] of maiores) {
+            const grupo = document.createElement('div');
+            grupo.className = 'grafico-produtividade-grupo';
+            const nome = document.createElement('strong');
+            nome.textContent = motorista;
+            grupo.append(nome);
+
+            for (const [rotulo, quantidade, classe] of [
+                ['Etapas', etapas, 'etapas'],
+                ['Transportes distintos', transportes, 'transportes']
+            ]) {
+                const serie = document.createElement('div');
+                serie.className = 'grafico-produtividade-serie ' + classe;
+                const texto = document.createElement('span');
+                texto.textContent = rotulo + ' · ' + numero.format(quantidade);
+                const trilho = document.createElement('span');
+                trilho.className = 'grafico-produtividade-trilho';
+                trilho.setAttribute('aria-hidden', 'true');
+                const barra = document.createElement('span');
+                barra.style.width = (Number(quantidade) / escala * 100) + '%';
+                trilho.append(barra);
+                serie.append(texto, trilho);
+                grupo.append(serie);
+            }
+            grafico.append(grupo);
+        }
+        area.append(grafico);
     }
 
     for (const cartao of document.querySelectorAll('[data-transporte]')) {
@@ -368,7 +478,13 @@
             'thead{display:table-header-group}tr{break-inside:avoid}';
         janela.document.head.append(estilo);
         janela.document.body.append(janela.document.importNode(document.getElementById('transporte-impressao'), true));
-        janela.document.getElementById('transporte-visualizacao').remove();
+        const visualizacao = janela.document.getElementById('transporte-visualizacao');
+        if (visualizacao.querySelector('.grafico-produtividade')) {
+            janela.document.head.append(janela.document.importNode(
+                document.getElementById('estilo-grafico-produtividade'), true));
+        } else {
+            visualizacao.remove();
+        }
         janela.focus();
         janela.print();
     });

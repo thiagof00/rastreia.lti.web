@@ -114,11 +114,43 @@
         .transporte-previa th { position: static; }
         #transporte-visualizacao:not(:empty) { margin-block-end: 20px; }
         .transporte-timeline {
+            list-style: none;
             padding-inline-start: 22px;
             border-inline-start: 2px solid var(--purple-500);
         }
-        .transporte-timeline li { margin-block-end: 12px; }
+        .transporte-timeline li { position: relative; margin-block-end: 12px; }
+        .transporte-timeline li::before {
+            content: "";
+            position: absolute;
+            inset-inline-start: -28px;
+            inset-block-start: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--purple-500);
+            border-radius: 50%;
+        }
         .transporte-timeline li p { margin: 4px 0; }
+        .transporte-timeline-painel {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 24px;
+            align-items: start;
+        }
+        .transporte-timeline-grafico {
+            margin: 0;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+        .transporte-timeline-grafico figcaption { font-weight: 600; margin-block-end: 8px; }
+        .transporte-timeline-grafico svg { display: block; width: 100%; }
+        .transporte-timeline-grafico text { fill: currentColor; font-size: 14px; }
+        .timeline-eixos { fill: none; stroke: currentColor; opacity: .6; }
+        .timeline-trajeto { fill: none; stroke: var(--purple-500); stroke-width: 2; }
+        .timeline-ponto { fill: var(--purple-500); stroke: var(--surface); stroke-width: 2; }
+        @media (max-width: 800px) {
+            .transporte-timeline-painel { grid-template-columns: 1fr; }
+        }
         .transporte-pizza {
             width: min(190px, 100%);
             aspect-ratio: 1;
@@ -129,5 +161,25 @@
         .transporte-legenda li { padding-inline-start: 8px; border-inline-start: 6px solid; margin-block: 6px; }
         .transporte-barras li { display: grid; gap: 4px; margin-block: 8px; }
         .transporte-barras progress { width: min(100%, 520px); accent-color: var(--purple-500); }
+    </style>
+    <style id="estilo-grafico-produtividade">
+        .grafico-produtividade { margin-block: 16px 24px; }
+        .grafico-produtividade h3 { margin-block: 0 12px; }
+        .grafico-produtividade-grupo { margin-block: 12px; break-inside: avoid; }
+        .grafico-produtividade-serie { display: grid; gap: 4px; margin-block: 6px; }
+        .grafico-produtividade-trilho {
+            display: block;
+            max-width: 640px;
+            border: 1px solid #8888;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .grafico-produtividade-trilho > span {
+            display: block;
+            border-block-start: 10px solid #7561d1;
+        }
+        .grafico-produtividade-serie.transportes .grafico-produtividade-trilho > span {
+            border-block-start-color: #168d86;
+        }
     </style>
 </th:block>
